@@ -1,0 +1,20 @@
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\bin\Release\Esacape From Tolochin.exe.config
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\bin\Release\Esacape From Tolochin.exe
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\bin\Release\Esacape From Tolochin.pdb
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.csproj.AssemblyReference.cache
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape_From_Tolochin.MainForm.resources
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape_From_Tolochin.Properties.Resources.resources
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.csproj.GenerateResource.cache
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.exe
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.pdb
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\bin\Release\Esacape From Tolochin.exe.config
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\bin\Release\Esacape From Tolochin.exe
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\bin\Release\Esacape From Tolochin.pdb
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.csproj.AssemblyReference.cache
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape_From_Tolochin.MainForm.resources
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape_From_Tolochin.Properties.Resources.resources
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.csproj.GenerateResource.cache
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.csproj.CoreCompileInputs.cache
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.exe
+D:\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Release\Esacape From Tolochin.pdb

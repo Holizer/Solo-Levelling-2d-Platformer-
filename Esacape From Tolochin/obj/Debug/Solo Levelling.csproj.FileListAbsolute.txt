@@ -1,0 +1,9 @@
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\bin\Debug\Esacape From Tolochin.exe.config
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\bin\Debug\Esacape From Tolochin.exe
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Debug\Solo Levelling.csproj.AssemblyReference.cache
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Debug\Esacape_From_Tolochin.MainForm.resources
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Debug\Esacape_From_Tolochin.Properties.Resources.resources
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Debug\Solo Levelling.csproj.GenerateResource.cache
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Debug\Solo Levelling.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Debug\Esacape From Tolochin.exe
+C:\Users\LENOVO\source\repos\Esacape From Tolochin\Esacape From Tolochin\obj\Debug\Esacape From Tolochin.pdb
