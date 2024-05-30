@@ -16,7 +16,7 @@ namespace SoloLeveling
         public Color ParticleColor { get; set; }
         public Bitmap Texture { get; set; }
     }
-    internal class ParticalLogic
+    internal class ParticalMovement
     {
         public static List<Particle> particles = new List<Particle>();
 
@@ -57,11 +57,29 @@ namespace SoloLeveling
                 particles.Add(experienceParticle);
             }
         }
-        public class MathHelper
+        private static float Lerp(float start, float end, float amount)
         {
-            public static float Lerp(float start, float end, float amount)
+            return start + (end - start) * amount;
+        }
+        public static void MoveExperienceParticleTowardsPlayer(Particle particle)
+        {
+            float targetX = player.X < particle.X ? player.X - player.Width / 2 : player.X + player.Width / 2;
+            float targetY = player.Y + player.Height / 2;
+
+            float directionX = targetX - particle.X;
+            float directionY = targetY - particle.Y;
+            float distanceToPlayer = (float)Math.Sqrt(directionX * directionX + directionY * directionY);
+
+            float lerpFactor = 0.05f;
+            particle.X = (int)Lerp(particle.X, targetX, lerpFactor);
+            particle.Y = (int)Lerp(particle.Y, targetY, lerpFactor);
+
+            Rectangle particleRectangle = new Rectangle(particle.X, particle.Y, particle.Size, particle.Size);
+
+            if (particleRectangle.IntersectsWith(player.GetRectangle(clientSize)))
             {
-                return start + (end - start) * amount;
+                particles.Remove(particle);
+                player.GainExperience(20);
             }
         }
         public static void MoveDeathParticle(Particle particle)
@@ -74,6 +92,27 @@ namespace SoloLeveling
 
             particle.X += (int)particle.SpeedX;
             particle.Y += (int)particle.SpeedY;
+        }
+        public static void UpdateParticles()
+        {
+            for (int i = particles.Count - 1; i >= 0; i--)
+            {
+                Particle particle = particles[i];
+
+                if (particle.Texture == ExpParticleTexture)
+                {
+                    MoveExperienceParticleTowardsPlayer(particle);
+                }
+                else if (particle.ParticleColor == Color.Red)
+                {
+                    MoveDeathParticle(particle);
+                }
+
+                if (particle.X > cameraX + clientWidth || particle.X < 0 || particle.Y > clientHeight || particle.Y < 0)
+                {
+                    particles.RemoveAt(i);
+                }
+            }
         }
     }
 }

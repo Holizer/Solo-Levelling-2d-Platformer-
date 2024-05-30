@@ -61,11 +61,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ending.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ending.Designer.cs">
+      <DependentUpon>Ending.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pickups.cs" />
     <Compile Include="HealtBar.cs" />
     <Compile Include="AnimationManager.cs" />
     <Compile Include="ParticalLogic.cs" />
     <Compile Include="ResizeAdaptatinon.cs" />
+    <Compile Include="DrawAnimation.cs" />
     <Compile Include="Sword.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Entity.cs" />

@@ -34,7 +34,6 @@ namespace SoloLeveling
     }
     public class SwordAttack
     {
-
         public static DateTime chargedAttackStartTime;
 
         public static DateTime AttackStartTime;

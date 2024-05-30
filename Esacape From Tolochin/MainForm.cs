@@ -11,9 +11,7 @@ using System.Drawing.Text;
 using System.Media;
 using Button = System.Windows.Forms.Button;
 using static SoloLeveling.AnimationManagaer;
-using static SoloLeveling.Player;
-using static SoloLeveling.Enemy;
-using static SoloLeveling.ParticalLogic;
+using static SoloLeveling.ParticalMovement;
 
 namespace SoloLeveling
 {
@@ -39,7 +37,7 @@ namespace SoloLeveling
 
         private bool isGameOver = false;
         private bool ButtonsIsCreated = false;
-        private int overlayAlpha = 0;
+        public static int overlayAlpha = 0;
 
         private int maxOverlayAlpha = 180;
         private int overlayDuration = 500;
@@ -125,7 +123,7 @@ namespace SoloLeveling
             player.MaxHealth = 100;
             player.CurrentHealth = 100;
 
-            InGameAnimation();
+            DrawAnimation.SetupInGameAnimation();
             playerAnimationTimer.Dispose();
             playerAnimationTimer.Start();
 
@@ -142,8 +140,8 @@ namespace SoloLeveling
             isBackgroundInvalidated = true;
         }
 
-        private Timer playerAnimationTimer;
-        private Timer enemyAnimationTimer;
+        public static Timer enemyAnimationTimer;
+        public static Timer playerAnimationTimer;
 
         private Timer gameTimer;
         private Timer loadingTimer;
@@ -151,124 +149,8 @@ namespace SoloLeveling
 
         private bool gamePaused = false;
         public static bool gameStarted = false;
-        private void InGameAnimation()
-        {
-            playerAFKAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle1.png")), new RectangleF(8, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle2.png")), new RectangleF(8, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle3.png")), new RectangleF(8, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle4.png")), new RectangleF(8, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle5.png")), new RectangleF(8, 2, 60, 80)),
-            }, 200);
-            playerMovingRightAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame1.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame2.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame3.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame4.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame5.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame6.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame7.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame8.png")), new RectangleF(0, 2, 65, 80)),
-            }, 90);
-            playerMovingLeftAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame1.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame2.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame3.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame4.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame5.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame6.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame7.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame8.png")), new Rectangle(0, 2, 65, 80)),
-            }, 90);
-            playerDeathAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame1.png")), new RectangleF(0, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame2.png")), new RectangleF(0, 2, 60, 85)),
-                //new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame3.png")), new Rectangle(0, -4, 70, 85)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame4.png")), new RectangleF(0, 20, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame5.png")), new RectangleF(0, 20, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame6.png")), new RectangleF(0, 21, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame7.png")), new RectangleF(0, 22, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame8.png")), new RectangleF(0, 22, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame9.png")), new RectangleF(0, 23, 70, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame10.png")), new RectangleF(0, 24, 75, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame11.png")), new RectangleF(0, 24, 75, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame12.png")), new RectangleF(0, 24, 75, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame13.png")), new RectangleF(0, 24, 90, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame14.png")), new RectangleF(0, 24, 90, 60)),
-            }, 275);
-            playerChargedLeftAttackAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame1.png")), new RectangleF(-40, 2, 100, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame2.png")), new RectangleF(0, -8, 80, 90)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame3.png")), new RectangleF(-20, -11, 100, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame4.png")), new RectangleF(-20, -13, 100, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame5.png")), new RectangleF(-15, -48, 100, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame6.png")), new RectangleF(-15, -53, 100, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame7.png")), new RectangleF(-15, -60, 100, 155)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame8.png")), new RectangleF(-15, -64, 100, 155)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame9.png")), new RectangleF(-15, -99, 110, 183)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame10.png")), new RectangleF(-35, -78, 95, 160)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame11.png")), new RectangleF(-10, -60, 200, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame12.png")), new RectangleF(-10, -52, 200, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame13.png")), new RectangleF(-10, 3, 200, 87)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame14.png")), new RectangleF(-215, -7, 450, 90)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame15.png")), new RectangleF(-160, -128, 300, 210)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame16.png")), new RectangleF(-160, -138, 330, 220)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame17.png")), new RectangleF(-175, -118, 370, 200)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame18.png")), new RectangleF(-120, -98, 310, 180)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame19.png")), new RectangleF(-2, -98, 210, 180)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame20.png")), new RectangleF(0, -53, 170, 135)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame21.png")), new RectangleF(0, -43, 145, 125)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame22.png")), new RectangleF(0, -3, 100, 85)),
-            }, 120);
-            playerChargedAttackAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame1.png")), new RectangleF(0, 2, 100, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame2.png")), new RectangleF(0, -8, 80, 90)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame3.png")), new RectangleF(0, -11, 100, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame4.png")), new RectangleF(-5, -13, 100, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame5.png")), new RectangleF(-5, -48, 100, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame6.png")), new RectangleF(-5, -53, 100, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame7.png")), new RectangleF(-5, -60, 100, 155)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame8.png")), new RectangleF(-5, -64, 100, 155)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame9.png")), new RectangleF(-5, -99, 110, 183)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame10.png")), new RectangleF(-35, -78, 95, 160)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame11.png")), new RectangleF(-135, -60, 200, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame12.png")), new RectangleF(-135, -52, 200, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame13.png")), new RectangleF(-135, 3, 200, 87)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame14.png")), new RectangleF(-155, -7, 450, 90)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame15.png")), new RectangleF(-70, -128, 300, 210)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame16.png")), new RectangleF(-100, -138, 330, 220)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame17.png")), new RectangleF(-115, -118, 370, 200)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame18.png")), new RectangleF(-110, -98, 310, 180)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame19.png")), new RectangleF(-135, -98, 210, 180)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame20.png")), new RectangleF(-98, -53, 170, 135)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame21.png")), new RectangleF(-75, -33, 145, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame22.png")), new RectangleF(-30, -3, 100, 85)),
-            }, 120);
-            playerAttackAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "AttackAnimLeft\\frame1.png")), new RectangleF(0, 2, 95, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "AttackAnimLeft\\frame3.png")), new RectangleF(-30, 2, 95, 80))
-            }, 100);
-            enemyMovingAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame1.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame2.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame3.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame4.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame5.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame6.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame7.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame8.png")), new RectangleF(0, 2, 35, 40)),
-            }, 275);
-        }
 
-        private PrivateFontCollection privateFontCollection = new PrivateFontCollection();
+        public static PrivateFontCollection privateFontCollection = new PrivateFontCollection();
         public MainForm()
         {
             this.DoubleBuffered = true;
@@ -278,7 +160,7 @@ namespace SoloLeveling
             gameTimer.Start();
             SetupGameField();
 
-            InGameAnimation();
+            DrawAnimation.SetupInGameAnimation();
 
             loadingTimer = new Timer();
             loadingTimer.Interval = 2500;
@@ -399,6 +281,49 @@ namespace SoloLeveling
                 control.Font = customFont;
             }
         }
+        private void UpdatePlayerAnimation(object sender, EventArgs e)
+        {
+            if (PauseMenu.Visible)
+            {
+                return;
+            }
+            else
+            {
+                Animation currentAnimation = player.CurrentAnimation;
+
+                if (currentAnimation.Frames != null && currentAnimation.Frames.Count > 0)
+                {
+                    int framesCount = currentAnimation.Frames.Count;
+                    player.currentSpriteIndex = (player.currentSpriteIndex + 1) % framesCount;
+                    if (player.currentSpriteIndex == 0)
+                    {
+                        playerAnimationTimer.Interval = currentAnimation.Interval;
+                    }
+                }
+                Invalidate();
+            }
+        }
+        private void UpdateEnemyAnimation(object sender, EventArgs e, Graphics g)
+        {
+            if (!PauseMenu.Visible)
+            {
+                foreach (var enemy in enemies)
+                {
+                    Animation currentAnimation = enemy.CurrentAnimation;
+                    if (currentAnimation.Frames != null && currentAnimation.Frames.Count > 0)
+                    {
+                        int framesCount = currentAnimation.Frames.Count;
+                        enemy.currentSpriteIndex = (enemy.currentSpriteIndex + 1) % framesCount;
+
+                        if (enemy.currentSpriteIndex == 0)
+                        {
+                            enemyAnimationTimer.Interval = currentAnimation.Interval;
+                        }
+                    }
+                    Invalidate();
+                }
+            }
+        }
         private void DeathOverlayTimer_Tick(object sender, EventArgs e)
         {
             if (YouAreDeadTimer.ElapsedMilliseconds > 2500 && !GameIsEnd)
@@ -430,203 +355,7 @@ namespace SoloLeveling
                 }
             }
         }
-        private void UpdatePlayerAnimation(object sender, EventArgs e)
-        {
-            if (PauseMenu.Visible)
-            {
-                return;
-            }
-            else
-            {
-                Animation currentAnimation = player.CurrentAnimation;
-
-                if (currentAnimation.Frames != null && currentAnimation.Frames.Count > 0)
-                {
-                    int framesCount = currentAnimation.Frames.Count;
-                    player.currentSpriteIndex = (player.currentSpriteIndex + 1) % framesCount;
-                    if (player.currentSpriteIndex == 0)
-                    {
-                        playerAnimationTimer.Interval = currentAnimation.Interval;
-                    }
-                }
-                Invalidate();
-            }
-        }
-        private void DrawPlayerAnimation(Graphics g)
-        {
-            Animation currentAnimation;
-
-            if (player.IsDead())
-            {
-                currentAnimation = playerDeathAnimation;
-                player.CurrentAnimation = playerDeathAnimation;
-                playerAnimationTimer.Interval = playerDeathAnimation.Interval;
-            }
-            else if (player.IsChargingAttack && !player.IsDead())
-            {
-                int moveDirection = player.CurrentDirection == Direction.Right ? 1 : -1;
-                currentAnimation = player.CurrentDirection == Direction.Right ? playerChargedAttackAnimation : playerChargedLeftAttackAnimation;
-                TimeSpan elapsed = DateTime.Now - SwordAttack.chargedAttackStartTime;
-
-                if (elapsed <= playerChargedAttackAnimation.TotalDuration)
-                {
-                    player.JumpForcePercent = 0;
-                    player.SpeedPrecent = 0;
-
-                    int framesCount = currentAnimation.Frames.Count;
-                    player.currentSpriteIndex = (int)(framesCount * elapsed.TotalMilliseconds / playerChargedAttackAnimation.TotalDuration.TotalMilliseconds) % framesCount;
-
-                    if (player.currentSpriteIndex == 2)
-                    {
-                        TryMovePlayer((int)(this.ClientSize.Width * 0.0025) * moveDirection);
-                    }
-                    if (player.currentSpriteIndex == 12)
-                    {
-                        SwordAttack.EnhancedAttack();
-                    }
-                    if (player.currentSpriteIndex == 9)
-                    {
-                        TryMovePlayer((int)(this.ClientSize.Width * 0.017) * moveDirection);
-                    }
-                }
-                else
-                {
-                    player.IsChargingAttack = false;
-
-                    player.JumpForcePercent = prevJumpForcePercent;
-                    player.SpeedPrecent = prevSpeedPrecent;
-                    player.currentSpriteIndex = 0;
-                }
-
-                player.CurrentAnimation = playerChargedAttackAnimation;
-                playerAnimationTimer.Interval = playerChargedAttackAnimation.Interval;
-            }
-            else if (!player.IsChargingAttack && player.IsAttack && !player.IsDead())
-            {
-                currentAnimation = player.CurrentDirection == Player.Direction.Right ? AnimationManagaer.CreateInvertedAnimation(playerAttackAnimation) : playerAttackAnimation;
-                TimeSpan elapsed = DateTime.Now - SwordAttack.AttackStartTime;
-                int directionX = player.CurrentDirection == Player.Direction.Right ? 1 : -1;
-
-                if (elapsed <= currentAnimation.TotalDuration)
-                {
-                    player.JumpForcePercent = 0;
-                    player.SpeedPrecent = 0;
-
-                    int framesCount = currentAnimation.Frames.Count;
-                    player.currentSpriteIndex = (int)(framesCount * elapsed.TotalMilliseconds / currentAnimation.TotalDuration.TotalMilliseconds) % framesCount;
-                    if (player.currentSpriteIndex == 1)
-                    {
-                        TryMovePlayer((int)(this.ClientSize.Width * 0.005) * directionX);
-                        sword.X = directionX < 0 ? player.X - player.Width : player.X + player.Width / 4;
-                    }
-                }
-                else
-                {
-                    SwordAttack.Attack();
-                    player.IsAttack = false;
-                    player.JumpForcePercent = prevJumpForcePercent;
-                    player.SpeedPrecent = prevSpeedPrecent;
-                    player.currentSpriteIndex = 0;
-                }
-
-                player.CurrentAnimation = currentAnimation;
-                playerAnimationTimer.Interval = currentAnimation.Interval;
-            }
-
-            else if (player.IsAFK())
-            {
-                currentAnimation = player.CurrentDirection == Player.Direction.Left ? AnimationManagaer.CreateInvertedAnimation(playerAFKAnimation) : playerAFKAnimation;
-                player.CurrentAnimation = playerAFKAnimation;
-                playerAnimationTimer.Interval = playerAFKAnimation.Interval;
-            }
-            else
-            {
-                if (player.CurrentDirection == Player.Direction.Left)
-                {
-                    currentAnimation = playerMovingLeftAnimation;
-                    player.CurrentAnimation = playerMovingLeftAnimation;
-                    playerAnimationTimer.Interval = playerMovingLeftAnimation.Interval;
-                }
-                else
-                {
-                    currentAnimation = playerMovingRightAnimation;
-                    player.CurrentAnimation = playerMovingRightAnimation;
-                    playerAnimationTimer.Interval = playerMovingRightAnimation.Interval;
-                }
-            }
-
-            if (player.currentSpriteIndex < 0 || player.currentSpriteIndex >= currentAnimation.Frames.Count)
-            {
-                player.currentSpriteIndex = 0;
-            }
-
-            g.DrawImage(
-                currentAnimation.Frames[player.currentSpriteIndex].Frame,
-                player.X + currentAnimation.Frames[player.currentSpriteIndex].DisplayRectangle.X,
-                player.Y + currentAnimation.Frames[player.currentSpriteIndex].DisplayRectangle.Y,
-                currentAnimation.Frames[player.currentSpriteIndex].DisplayRectangle.Width,
-                currentAnimation.Frames[player.currentSpriteIndex].DisplayRectangle.Height
-            );
-        }
-        private void UpdateEnemyAnimation(object sender, EventArgs e, Graphics g)
-        {
-            if (!PauseMenu.Visible)
-            {
-                foreach (var enemy in enemies)
-                {
-                    Animation currentAnimation = enemy.CurrentAnimation;
-                    if (currentAnimation.Frames != null && currentAnimation.Frames.Count > 0)
-                    {
-                        int framesCount = currentAnimation.Frames.Count;
-                        enemy.currentSpriteIndex = (enemy.currentSpriteIndex + 1) % framesCount;
-
-                        if (enemy.currentSpriteIndex == 0)
-                        {
-                            enemyAnimationTimer.Interval = currentAnimation.Interval;
-                        }
-                    }
-                    Invalidate();
-                }
-            }
-        }
-        private void DrawEnemyAnimation(Graphics g)
-        {
-            Animation currentAnimation = enemyMovingAnimation;
-
-            foreach (var enemy in enemies)
-            {
-                if (enemy.CurrentDirection == Enemy.EnemyDirection.Right)
-                {
-                    currentAnimation = enemyMovingAnimation;
-                    enemy.CurrentAnimation = currentAnimation;
-                    enemyAnimationTimer.Interval = enemyMovingAnimation.Interval;
-                }
-                else if (enemy.CurrentDirection == Enemy.EnemyDirection.Left)
-                {
-                    currentAnimation = AnimationManagaer.CreateInvertedAnimation(enemyMovingAnimation);
-                    enemy.CurrentAnimation = currentAnimation;
-                    enemyAnimationTimer.Interval = enemyMovingAnimation.Interval;
-                }
-                g.DrawImage(
-                    currentAnimation.Frames[enemy.currentSpriteIndex].Frame,
-                    enemy.X + currentAnimation.Frames[enemy.currentSpriteIndex].DisplayRectangle.X,
-                    enemy.Y + currentAnimation.Frames[enemy.currentSpriteIndex].DisplayRectangle.Y,
-                    currentAnimation.Frames[enemy.currentSpriteIndex].DisplayRectangle.Width,
-                    currentAnimation.Frames[enemy.currentSpriteIndex].DisplayRectangle.Height
-                );
-            }
-        }
-        private void TryMovePlayer(int deltaX)
-        {
-            int proposedX = player.X + deltaX;
-            bool willCollide = WillCollideWithObstacles(proposedX, player.Y, player.Width, player.Height);
-
-            if (!willCollide)
-            {
-                player.X = proposedX;
-            }
-        }
-        private bool WillCollideWithObstacles(int x, int y, int width, int height)
+        public static bool WillCollideWithObstacles(int x, int y, int width, int height)
         {
             if (x < 0 || x + width > LevelLength)
             {
@@ -636,7 +365,7 @@ namespace SoloLeveling
             // Пример проверки столкновения с платформами
             foreach (var platformRect in platforms)
             {
-                var rect = platformRect.ToRectangle(this.ClientSize);
+                var rect = platformRect.ToRectangle(clientSize);
                 if (CheckCollision(x, y, width, height, rect.X, rect.Y, rect.Width, rect.Height))
                 {
                     return true;
@@ -646,7 +375,7 @@ namespace SoloLeveling
             // Пример проверки столкновения с землей
             foreach (var groundRect in ground)
             {
-                var rect = groundRect.ToRectangle(this.ClientSize);
+                var rect = groundRect.ToRectangle(clientSize);
                 if (CheckCollision(x, y, width, height, rect.X, rect.Y, rect.Width, rect.Height))
                 {
                     return true;
@@ -660,7 +389,7 @@ namespace SoloLeveling
         public static Player player;
         public static Sword sword;
         public static float Gravity;
-        private int cameraX = 0;
+        public static int cameraX = 0;
         internal static HealthBar healthBar;
         public class DynamicRectangle
         {
@@ -685,7 +414,7 @@ namespace SoloLeveling
 
         public static List<Enemy> enemies;
         List<Pickup> pickups;
-        List<DynamicRectangle> ground;
+        public static List<DynamicRectangle> ground;
         public static List<DynamicRectangle> platforms;
         List<FallingPickup> TolochinApple;
 
@@ -849,7 +578,6 @@ namespace SoloLeveling
 
             originalResolution = this.ClientSize;
         }
-
         public class TraderZone
         {
             public RectangleF Bounds { get; private set; }
@@ -931,6 +659,7 @@ namespace SoloLeveling
 
         public static float prevJumpForcePercent;
         public static float prevSpeedPrecent;
+       
         public static bool CheckCollisionWithPlatforms(int proposedX, int proposedY, Enemy enemy)
         {
             foreach (var platformRect in platforms)
@@ -943,332 +672,8 @@ namespace SoloLeveling
             }
             return false;
         }
-        void HandlePlayerDead()
-        {
-            player.SpeedPrecent = 0;
 
-            if (!player.IsOnGround)
-            {
-                player.VerticalSpeed = Gravity;
-            }
-            else
-            {
-                player.JumpForcePercent = 0;
-                player.CurrentAnimation = playerDeathAnimation;
-                playerAnimationTimer.Interval = playerDeathAnimation.Interval;
-
-                if (player.currentSpriteIndex == player.CurrentAnimation.Frames.Count - 1)
-                {
-                    playerAnimationTimer.Stop();
-                }
-            }
-        }
-        void HandlePlayerAFK()
-        {
-            player.CurrentAnimation = playerAFKAnimation;
-            playerAnimationTimer.Interval = playerAFKAnimation.Interval;
-        }
-        void HandlePlayerAlive()
-        {
-            if (player.CurrentDirection == Player.Direction.Left)
-            {
-                player.CurrentAnimation = playerMovingLeftAnimation;
-                playerAnimationTimer.Interval = playerMovingLeftAnimation.Interval;
-            }
-            else
-            {
-                player.CurrentAnimation = playerMovingRightAnimation;
-                playerAnimationTimer.Interval = playerMovingRightAnimation.Interval;
-            }
-        }
-        void UpdatePlayer()
-        {
-            if (player.IsDead())
-            {
-                HandlePlayerDead();
-            }
-            else if (player.IsAFK())
-            {
-                HandlePlayerAFK();
-            }
-            else
-            {
-                HandlePlayerAlive();
-            }
-
-            sword.Y = player.Y;
-
-            if (Keyboard.IsKeyDown(Keys.A) || Keyboard.IsKeyDown(Keys.D))
-            {
-                int direction = Keyboard.IsKeyDown(Keys.A) ? -1 : 1;
-
-                player.CurrentDirection = direction == -1 ? Direction.Left : Direction.Right;
-
-                sword.X = player.CurrentDirection == Direction.Left ? player.X - player.Width - player.Width / 4 : player.X + player.Width / 4;
-
-                for (int speed = (int)player.Speed(this.ClientSize); speed > 0; speed--)
-                {
-                    int proposedLocation = player.X + speed * direction;
-                    if (proposedLocation >= 0 && proposedLocation <= LevelLength - player.Width)
-                    {
-                        bool playerWillCollide = ground.Any(rect => CheckCollision(proposedLocation, player.Y, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height))
-                                              || platforms.Any(rect => CheckCollision(proposedLocation, player.Y, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height));
-
-                        if (!playerWillCollide)
-                        {
-                            player.X = proposedLocation;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            player.IsOnGround = false;
-
-            player.IsOnGround = ground.Any(rect => CheckCollision(player.X, player.Y + 1, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height))
-                             || platforms.Any(rect => CheckCollision(player.X, player.Y + 1, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height));
-
-            foreach (var platformRect in platforms)
-            {
-                var rect = platformRect.ToRectangle(this.ClientSize);
-                if (CheckCollision(player.X, player.Y + 1, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height))
-                {
-                    player.IsOnGround = true;
-                    break;
-                }
-            }
-
-            if (Keyboard.IsKeyDown(Keys.Space) && player.IsOnGround)
-            {
-                player.VerticalSpeed = -player.JumpForce(this.ClientSize) / 4;
-                player.IsOnGround = false;
-            }
-
-            int oldY = player.Y;
-            float newY = oldY + player.VerticalSpeed;
-
-            bool collisionDetected = false;
-            RectangleF collidedObstacle = new RectangleF();
-
-            foreach (var groundRect in ground)
-            {
-                var rect = groundRect.ToRectangle(this.ClientSize);
-                if (CheckCollision(player.X, (int)newY, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height))
-                {
-                    collisionDetected = true;
-                    collidedObstacle = rect;
-                    break;
-                }
-            }
-
-            foreach (var platformRect in platforms)
-            {
-                var rect = platformRect.ToRectangle(this.ClientSize);
-                if (CheckCollision(player.X, (int)newY, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height))
-                {
-                    collisionDetected = true;
-                    collidedObstacle = rect;
-                    break;
-                }
-            }
-
-            player.VerticalSpeed += Gravity;
-
-            if (!collisionDetected)
-            {
-                player.Y = (int)newY;
-            }
-            else
-            {
-                if (player.VerticalSpeed > 0)
-                {
-                    player.Y = (int)(collidedObstacle.Y - player.Height);
-                    player.VerticalSpeed = 0;
-                }
-                else if (player.VerticalSpeed < 0)
-                {
-                    player.Y = (int)(collidedObstacle.Y + collidedObstacle.Height);
-                    player.VerticalSpeed = 0;
-                }
-            }
-        }
-        void UpdateEnemies()
-        {
-            foreach (var enemy in enemies)
-            {
-                // Расчет расстояния между игроком и врагом
-                float distanceX = player.X - enemy.X;
-                float distanceY = player.Y - enemy.Y;
-                double distanceToPlayer = Math.Sqrt(distanceX * distanceX + distanceY * distanceY);
-
-                // Логика для прыжка врага, когда игрок близко
-                if (distanceToPlayer < this.ClientSize.Width * 0.3 && enemy.IsOnGround && !player.IsDead())
-                {
-                    enemy.JumpDirectionX = player.X < enemy.X ? -1 : 1;
-                    enemy.CurrentDirection = enemy.JumpDirectionX < 0 ? EnemyDirection.Left : EnemyDirection.Right;
-
-                    if (!enemy.JumpTimer.IsRunning)
-                    {
-                        enemy.JumpTimer.Restart();
-                    }
-
-                    if (enemy.JumpTimer.ElapsedMilliseconds >= 500 && !enemy.IsJumping && enemy.IsOnGround)
-                    {
-                        enemy.IsJumping = true;
-                        enemy.VerticalSpeed = -enemy.JumpForce(this.ClientSize) / 4;
-                        enemy.JumpTimer.Reset();
-                    }
-                }
-                else
-                {
-                    // Логика для движения врага по платформам
-                    enemy.JumpTimer.Stop();
-                    enemy.JumpTimer.Reset();
-
-                    if (!enemy.IsJumping && enemy.IsOnGround)
-                    {
-                        Rectangle enemyRect = new Rectangle(enemy.X, enemy.Y, enemy.Width, enemy.Height);
-
-                        bool PlatformCollision = false;
-
-                        if (enemy.X <= 0 || enemy.X + enemy.Width >= LevelLength)
-                        {
-                            enemy.HorizontalSpeed = -enemy.HorizontalSpeed;
-                        }
-
-                        foreach (var platformRect in platforms)
-                        {
-                            var rect = platformRect.ToRectangle(this.ClientSize);
-
-                            if (CheckCollision(enemy.X, enemy.Y, enemy.Width, enemy.Height, rect.X, rect.Y, rect.Width, rect.Height))
-                            {
-                                PlatformCollision = true;
-
-                                if (enemyRect.Left < rect.Left)
-                                {
-                                    enemy.X = (int)rect.Left - enemy.Width;
-                                    enemy.HorizontalSpeed = -enemy.HorizontalSpeed;
-                                    enemy.CurrentDirection = EnemyDirection.Left;
-                                }
-                                else
-                                {
-                                    enemy.X = (int)rect.Right;
-                                    enemy.HorizontalSpeed = -enemy.HorizontalSpeed;
-                                    enemy.CurrentDirection = EnemyDirection.Right;
-                                }
-                            }
-                        }
-
-                        // Логика для определения направления движения врага
-                        if (enemy.HorizontalSpeed < 0)
-                        {
-                            enemy.CurrentDirection = EnemyDirection.Left;
-                        }
-                        else if (enemy.HorizontalSpeed > 0)
-                        {
-                            enemy.CurrentDirection = EnemyDirection.Right;
-                        }
-
-                        enemy.X += enemy.HorizontalSpeed;
-
-                        if (!PlatformCollision)
-                        {
-                            enemy.IsOnGround = false;
-                            enemy.IsJumping = true;
-                        }
-                    }
-                }
-
-                if (enemy.IsJumping || !enemy.IsOnGround)
-                {
-
-                    if (enemy.X <= 0 || enemy.X - enemy.Width >= LevelLength)
-                    {
-                        enemy.HorizontalSpeed = -enemy.HorizontalSpeed;
-                    }
-
-                    int proposedX = enemy.X;
-                    bool collisionWithPlatform = false;
-                    int proposedY = enemy.Y + (int)enemy.VerticalSpeed;
-
-                    enemy.VerticalSpeed += (int)Gravity;
-                    enemy.IsOnGround = enemy.IsJumping ? false : true;
-
-                    if (distanceToPlayer < this.ClientSize.Width * 0.3 && player.IsOnGround && !player.IsDead())
-                    {
-                        proposedX = enemy.X + enemy.JumpSpeed * enemy.JumpDirectionX;
-                        enemy.X = proposedX;
-                    }
-
-                    RectangleF enemyRect = new RectangleF(proposedX, proposedY, enemy.Width, enemy.Height);
-
-                    foreach (var groundRect in ground)
-                    {
-                        var rect = groundRect.ToRectangle(this.ClientSize);
-                        if (enemyRect.IntersectsWith(rect))
-                        {
-                            enemy.IsOnGround = true;
-                            enemy.IsJumping = false;
-                            enemy.VerticalSpeed = 0;
-                            enemy.Y = (int)rect.Y - enemy.Height;
-                            collisionWithPlatform = true;
-                            break;
-                        }
-                    }
-
-                    foreach (var platformRect in platforms)
-                    {
-                        var rect = platformRect.ToRectangle(this.ClientSize);
-                        if (enemyRect.IntersectsWith(rect))
-                        {
-                            bool fromTop = enemyRect.Bottom >= rect.Top && enemyRect.Bottom <= rect.Top + (int)(enemy.VerticalSpeed + Gravity);
-
-                            if (enemyRect.Left < rect.Left && enemyRect.Bottom <= rect.Bottom && !fromTop)
-                            {
-                                enemy.X = (int)rect.Left - enemy.Width;
-                                enemy.HorizontalSpeed = -enemy.HorizontalSpeed;
-                                enemy.CurrentDirection = EnemyDirection.Left;
-                            }
-                            else if (enemyRect.Right > rect.Right && !fromTop)
-                            {
-                                enemy.X = (int)rect.Right;
-                                enemy.HorizontalSpeed = -enemy.HorizontalSpeed;
-                                enemy.CurrentDirection = EnemyDirection.Right;
-                            }
-                            else
-                            {
-                                if (enemy.VerticalSpeed < 0 && enemyRect.Bottom >= rect.Bottom)
-                                {
-                                    enemy.Y = (int)rect.Bottom;
-                                    collisionWithPlatform = true;
-                                    enemy.IsJumping = true;
-                                    enemy.IsOnGround = false;
-                                    enemy.VerticalSpeed = 0;
-                                }
-                                else if (fromTop)
-                                {
-                                    collisionWithPlatform = true;
-                                    enemy.IsJumping = false;
-                                    enemy.IsOnGround = true;
-                                }
-                                if (enemyRect.Bottom > rect.Top && enemyRect.Bottom < rect.Bottom)
-                                {
-                                    collisionWithPlatform = true;
-                                    enemy.Y = (int)rect.Top - enemy.Height;
-                                    enemy.VerticalSpeed = 0;
-                                    enemy.IsJumping = false;
-                                    enemy.IsOnGround = true;
-                                }
-                            }
-                        }
-                    }
-                    if (!collisionWithPlatform)
-                    {
-                        enemy.Y = proposedY;
-                    }
-                }
-            }
-        }
+        
         public static float FindAdaptiveFontSize(Graphics g, string text, float maxWidth, float maxHeight, Size clientSize, Font prototypeFont)
         {
             float fontSize = prototypeFont.Size;
@@ -1290,56 +695,14 @@ namespace SoloLeveling
 
         public static List<Enemy> toBeExploded = new List<Enemy>();
 
-        Font levelFont;
-        Font DeathFont;
+        public static Font levelFont;
+        public static Font DeathFont;
 
         private bool f11KeyPressed = false;
         private Stopwatch YouAreDeadTimer = new Stopwatch();
         private bool isBackgroundInvalidated = true;
         public static Bitmap ExpParticleTexture = new Bitmap(Path.Combine(resourcesPath, "ExpPariticle.png"));
         public static Size originalResolution;
-        void MoveExperienceParticleTowardsPlayer(Particle particle)
-        {
-            float targetX = player.X < particle.X ? player.X - player.Width / 2 : player.X + player.Width / 2;
-            float targetY = player.Y + player.Height / 2;
-
-            float directionX = targetX - particle.X;
-            float directionY = targetY - particle.Y;
-            float distanceToPlayer = (float)Math.Sqrt(directionX * directionX + directionY * directionY);
-
-            float lerpFactor = 0.05f;
-            particle.X = (int)MathHelper.Lerp(particle.X, targetX, lerpFactor);
-            particle.Y = (int)MathHelper.Lerp(particle.Y, targetY, lerpFactor);
-
-            Rectangle particleRectangle = new Rectangle(particle.X, particle.Y, particle.Size, particle.Size);
-
-            if (particleRectangle.IntersectsWith(player.GetRectangle(this.ClientSize)))
-            {
-                particles.Remove(particle);
-                player.GainExperience(20);
-            }
-        }
-        void UpdateParticles()
-        {
-            for (int i = particles.Count - 1; i >= 0; i--)
-            {
-                Particle particle = particles[i];
-
-                if (particle.Texture == ExpParticleTexture)
-                {
-                    MoveExperienceParticleTowardsPlayer(particle);
-                }
-                else if (particle.ParticleColor == Color.Red)
-                {
-                    ParticalLogic.MoveDeathParticle(particle);
-                }
-
-                if (particle.X > cameraX + this.ClientSize.Width || particle.X < 0 || particle.Y > this.ClientSize.Height || particle.Y < 0)
-                {
-                    particles.RemoveAt(i);
-                }
-            }
-        }
 
         private bool GameIsEnd = false;
         public static bool GameIsRestarted = false;
@@ -1358,9 +721,9 @@ namespace SoloLeveling
 
             Rectangle cameraViewRectangle = new Rectangle(cameraX, 0, this.ClientSize.Width, this.ClientSize.Height);
             Parallel.Invoke(
-               () => UpdatePlayer(),
-               () => UpdateEnemies(),
-               () => UpdateParticles()
+               () => PlayerMovement.UpdatePlayer(),
+               () => EnemyMovement.UpdateEnemies(),
+               () => ParticalMovement.UpdateParticles()
             );
 
             Rectangle TradeZoneRect = new Rectangle((int)traderZone.Bounds.X, (int)traderZone.Bounds.Y, (int)traderZone.Bounds.Width, (int)traderZone.Bounds.Height);
@@ -1433,7 +796,7 @@ namespace SoloLeveling
 
             foreach (var enemy in toBeExploded.ToList())
             {
-                ParticalLogic.ExplodeEnemy(enemy);
+                ExplodeEnemy(enemy);
                 SpawnExperienceParticles(enemy);
                 toBeExploded.Remove(enemy);
             }
@@ -1538,8 +901,8 @@ namespace SoloLeveling
 
                 e.Graphics.DrawRectangle(new Pen(Color.Transparent, 1), player.GetRectangle(this.ClientSize));
 
-                DrawPlayerAnimation(g);
-                DrawEnemyAnimation(g);
+                DrawAnimation.DrawPlayerAnimation(g);
+                DrawAnimation.DrawEnemyAnimation(g);
 
                 foreach (var particle in particles)
                 {
@@ -1562,15 +925,15 @@ namespace SoloLeveling
 
                 healthBar.Draw(g, this.ClientSize, cameraX);
 
-                DrawLevelUp(g);
+                DrawAnimation.DrawLevelUp(g);
 
                 if (PauseMenu.Visible)
                 {
-                    DrawPauseMenu(g);
+                    DrawAnimation.DrawPauseMenu(g);
                 }
                 if (isGameOver && YouAreDeadTimer.ElapsedMilliseconds > 2500 && player.IsDead() && !GameIsEnd)
                 {
-                    DrawPlayerDeath(g);
+                    DrawAnimation.DrawPlayerDeath(g);
                     restartButton.Visible = true;
                     quitButton.Visible = true;
                 }
@@ -1587,46 +950,7 @@ namespace SoloLeveling
                 }
             }
         }
-        private void DrawLevelUp(Graphics g)
-        {
-            string levelText = $"Level: {player.Level}";
-            string experienceText = $"Experience: {player.Experience}/{player.ExperienceToNextLevel}";
-
-            levelFont = new Font(privateFontCollection.Families.First(f => f.Name == "Planes_ValMore"), (int)(this.ClientSize.Width * 0.018), FontStyle.Bold);
-
-            SizeF levelTextSize = g.MeasureString(levelText, levelFont);
-            SizeF experienceTextSize = g.MeasureString(experienceText, levelFont);
-
-            float levelTextX = cameraX + this.ClientSize.Width / 2 - levelTextSize.Width / 2;
-            float levelTextY = this.ClientSize.Width * 0.012f;
-            PointF levelTextLocation = new PointF(levelTextX, levelTextY);
-
-            float experienceTextX = cameraX + this.ClientSize.Width / 2 - experienceTextSize.Width / 2;
-            float experienceTextY = levelTextY + levelTextSize.Height;
-            PointF experienceTextLocation = new PointF(experienceTextX, experienceTextY);
-
-            g.DrawString(levelText, levelFont, Brushes.White, levelTextLocation);
-            g.DrawString(experienceText, levelFont, Brushes.White, experienceTextLocation);
-        }
-        private void DrawPlayerDeath(Graphics g)
-        {
-            string deathText = "ВЫ ПОГИБЛИ";
-            DeathFont = new Font(privateFontCollection.Families.First(f => f.Name == "Planes_ValMore"), (int)(this.ClientSize.Width * 0.05), FontStyle.Bold);
-
-            SizeF TextSize = g.MeasureString(deathText, DeathFont);
-
-            float TextX = cameraX + this.ClientSize.Width / 2 - TextSize.Width / 2;
-            float TextY = this.ClientSize.Height * 0.35f;
-
-            PointF DeathTextLocation = new PointF(TextX, TextY);
-
-            Color overlayColor = Color.FromArgb(overlayAlpha, 0, 0, 0);
-            Brush overlayBrush = new SolidBrush(overlayColor);
-
-            g.FillRectangle(overlayBrush, cameraX, 0, this.ClientSize.Width, this.ClientSize.Height);
-
-            g.DrawString(deathText, DeathFont, Brushes.Red, DeathTextLocation);
-        }
+        // Нажатие конпокой мыши
         private void MainForm_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && player.IsOnGround && !player.IsChargingAttack)
@@ -1639,6 +963,7 @@ namespace SoloLeveling
                 SwordAttack.ChargingEnhancedAttack();
             }
         }
+        // Нажатие кнопки на клавиатуре
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F11)
@@ -1654,12 +979,8 @@ namespace SoloLeveling
                 SwordAttack.AttackWithSword();
             }
         }
-        private void DrawPauseMenu(Graphics g)
-        {
-            Color overlayColor = Color.FromArgb(160, 0, 0, 0);
-            Brush overlayBrush = new SolidBrush(overlayColor);
-            g.FillRectangle(overlayBrush, cameraX, 0, this.ClientSize.Width, this.ClientSize.Height);
-        }
+
+        // Кнопка "START"
         private void start_game_btn_Click(object sender, EventArgs e)
         {
             //InMenuMenuSound.Stop();
@@ -1667,6 +988,8 @@ namespace SoloLeveling
             loadingTimer.Start();
             gamePaused = false;
         }
+        
+        // Кнопка "EXTI"
         private void leave_game_btn_Click(object sender, EventArgs e)
         {
             Application.Exit();
