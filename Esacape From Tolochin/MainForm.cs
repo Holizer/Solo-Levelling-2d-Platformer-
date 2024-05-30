@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Drawing.Text;
 using System.Media;
@@ -23,6 +22,7 @@ namespace SoloLeveling
         public static string resourcesPath = Path.Combine(Application.StartupPath, @"..\..\Resources");
         public static int clientWidth;
         public static int clientHeight;
+        public static Size clientSize;
         public static FormWindowState windowState;
 
         private SoundPlayer ChargedAttackSound = new SoundPlayer(Path.Combine(resourcesPath, "Sounds\\FateAttack.wav"));
@@ -32,7 +32,7 @@ namespace SoloLeveling
         private SoundPlayer EndingMusic = new SoundPlayer(Path.Combine(resourcesPath, "Sounds\\Hymn.wav"));
 
         private SoundPlayer EatingSound = new SoundPlayer(Path.Combine(resourcesPath, "Sounds\\Eating.wav"));
-        private SoundPlayer HitDetectedSound = new SoundPlayer(Path.Combine(resourcesPath, "Sounds\\HitDetected.wav"));
+        public static SoundPlayer HitDetectedSound = new SoundPlayer(Path.Combine(resourcesPath, "Sounds\\HitDetected.wav"));
         public static SoundPlayer LevelUpSound = new SoundPlayer(Path.Combine(resourcesPath, "Sounds\\LevelUp.wav"));
 
         private Bitmap buttonBackground = new Bitmap(Path.Combine(resourcesPath, "PauseButton.png"));
@@ -337,9 +337,10 @@ namespace SoloLeveling
         {
             //InMenuMenuSound.Play(); 
             
-            clientWidth = this.ClientSize.Width;
-            clientHeight = this.ClientSize.Height;
-
+            clientSize = this.ClientSize;
+            clientWidth = clientSize.Width;
+            clientHeight = clientSize.Height;
+     
             this.DoubleBuffered = true;
             LoadCustomFont();
             ApplyCustomFont(EndingText, "Planes_ValMore", 18);
@@ -429,10 +430,6 @@ namespace SoloLeveling
                 }
             }
         }
-
-        private DateTime chargedAttackStartTime;
-
-        private DateTime AttackStartTime;
         private void UpdatePlayerAnimation(object sender, EventArgs e)
         {
             if (PauseMenu.Visible)
@@ -469,7 +466,7 @@ namespace SoloLeveling
             {
                 int moveDirection = player.CurrentDirection == Direction.Right ? 1 : -1;
                 currentAnimation = player.CurrentDirection == Direction.Right ? playerChargedAttackAnimation : playerChargedLeftAttackAnimation;
-                TimeSpan elapsed = DateTime.Now - chargedAttackStartTime;
+                TimeSpan elapsed = DateTime.Now - SwordAttack.chargedAttackStartTime;
 
                 if (elapsed <= playerChargedAttackAnimation.TotalDuration)
                 {
@@ -485,7 +482,7 @@ namespace SoloLeveling
                     }
                     if (player.currentSpriteIndex == 12)
                     {
-                        EnhancedAttack();
+                        SwordAttack.EnhancedAttack();
                     }
                     if (player.currentSpriteIndex == 9)
                     {
@@ -507,7 +504,7 @@ namespace SoloLeveling
             else if (!player.IsChargingAttack && player.IsAttack && !player.IsDead())
             {
                 currentAnimation = player.CurrentDirection == Player.Direction.Right ? AnimationManagaer.CreateInvertedAnimation(playerAttackAnimation) : playerAttackAnimation;
-                TimeSpan elapsed = DateTime.Now - AttackStartTime;
+                TimeSpan elapsed = DateTime.Now - SwordAttack.AttackStartTime;
                 int directionX = player.CurrentDirection == Player.Direction.Right ? 1 : -1;
 
                 if (elapsed <= currentAnimation.TotalDuration)
@@ -525,7 +522,7 @@ namespace SoloLeveling
                 }
                 else
                 {
-                    Attack();
+                    SwordAttack.Attack();
                     player.IsAttack = false;
                     player.JumpForcePercent = prevJumpForcePercent;
                     player.SpeedPrecent = prevSpeedPrecent;
@@ -661,7 +658,7 @@ namespace SoloLeveling
 
         public static int LevelLength;
         public static Player player;
-        private Sword sword;
+        public static Sword sword;
         public static float Gravity;
         private int cameraX = 0;
         internal static HealthBar healthBar;
@@ -686,10 +683,10 @@ namespace SoloLeveling
             }
         }
 
-        List<Enemy> enemies;
+        public static List<Enemy> enemies;
         List<Pickup> pickups;
         List<DynamicRectangle> ground;
-        List<DynamicRectangle> platforms;
+        public static List<DynamicRectangle> platforms;
         List<FallingPickup> TolochinApple;
 
         private void AdaptToResolution()
@@ -924,7 +921,7 @@ namespace SoloLeveling
             //public Sword(int x, int y, float width, float height, int damage)
             sword = new Sword(player.X, player.Y, 0.15f, 0.18f, 35);
         }
-        private bool CheckCollision(int x1, int y1, int w1, int h1, float x2, float y2, float w2, float h2)
+        public static bool CheckCollision(int x1, int y1, int w1, int h1, float x2, float y2, float w2, float h2)
         {
             return x1 < x2 + w2
                 && x1 + w1 > x2
@@ -932,14 +929,13 @@ namespace SoloLeveling
                 && y1 + h1 > y2;
         }
 
-        float prevJumpForcePercent;
-        float prevSpeedPrecent;
-       
-        private bool CheckCollisionWithPlatforms(int proposedX, int proposedY, Enemy enemy)
+        public static float prevJumpForcePercent;
+        public static float prevSpeedPrecent;
+        public static bool CheckCollisionWithPlatforms(int proposedX, int proposedY, Enemy enemy)
         {
             foreach (var platformRect in platforms)
             {
-                var rect = platformRect.ToRectangle(this.ClientSize);
+                var rect = platformRect.ToRectangle(clientSize);
                 if (CheckCollision(proposedX, proposedY, enemy.Width, enemy.Height, rect.X, rect.Y, rect.Width, rect.Height))
                 {
                     return true;
@@ -1292,7 +1288,7 @@ namespace SoloLeveling
         Bitmap GroundTexture = new Bitmap(Path.Combine(resourcesPath, "ground2.png"));
         Bitmap backgroundImage = new Bitmap(Path.Combine(resourcesPath, "bg3.png"));
 
-        List<Enemy> toBeExploded = new List<Enemy>();
+        public static List<Enemy> toBeExploded = new List<Enemy>();
 
         Font levelFont;
         Font DeathFont;
@@ -1635,148 +1631,12 @@ namespace SoloLeveling
         {
             if (e.Button == MouseButtons.Left && player.IsOnGround && !player.IsChargingAttack)
             {
-                AttackWithSword();
+                SwordAttack.AttackWithSword();
             }
             if (e.Button == MouseButtons.Right && player.IsOnGround)
             {
                 ChargedAttackSound.Play();
-                ChargingEnhancedAttack();
-            }
-        }
-        private void AttackWithSword()
-        {
-            if (player.IsAttack)
-            {
-                return;
-            }
-
-            if (!player.IsAttack)
-            {
-                prevJumpForcePercent = player.JumpForcePercent;
-                prevSpeedPrecent = player.SpeedPrecent;
-            }
-
-            AttackStartTime = DateTime.Now;
-
-            player.IsAttack = true;
-
-            player.lastAttackTime = DateTime.Now;
-        }
-        private void Attack()
-        {
-            int knockbackDistance = (int)(this.ClientSize.Width * 0.1);
-            int knockbackCooldown = 10;
-
-            Rectangle swordRect = new Rectangle(sword.X, sword.Y, sword.Width, sword.Height);
-
-            foreach (var enemy in enemies)
-            {
-                Rectangle enemyRect = enemy.GetRectangle(this.ClientSize);
-
-                if (swordRect.IntersectsWith(enemyRect))
-                {
-                    HitDetectedSound.Play();
-                    enemy.TakeDamage(sword.Damage);
-
-                    if (enemy.IsDead())
-                    {
-                        toBeExploded.Add(enemy);
-                    }
-
-                    if (enemy.KnockbackTimer.ElapsedMilliseconds == 0 || enemy.KnockbackTimer.ElapsedMilliseconds >= knockbackCooldown)
-                    {
-                        if (enemy.IsOnGround && !enemy.IsJumping)
-                        {
-                            enemy.JumpTimer.Stop();
-                            enemy.KnockbackTimer.Restart();
-
-                            int knockbackDirectionX = player.X < enemy.X ? 1 : -1;
-
-                            int proposedX = enemy.X + knockbackDistance * knockbackDirectionX;
-                            int proposedY = enemy.Y - (int)enemy.VerticalSpeed;
-
-                            bool collisionDetected = CheckCollisionWithPlatforms(proposedX, proposedY, enemy);
-                            if (!collisionDetected)
-                            {
-                                enemy.JumpTimer.Restart();
-                                enemy.X = proposedX;
-                                enemy.Y = proposedY;
-                            }
-
-                            enemy.VerticalSpeed = -enemy.JumpForce(this.ClientSize) / 4;
-                            enemy.IsOnGround = false;
-                            enemy.IsJumping = true;
-                        }
-                    }
-                }
-            }
-        }
-        private void ChargingEnhancedAttack()
-        {
-            if (player.IsChargingAttack)
-            {
-                return;
-            }
-
-            if (!player.IsChargingAttack)
-            {
-                prevJumpForcePercent = player.JumpForcePercent;
-                prevSpeedPrecent = player.SpeedPrecent;
-            }
-
-            chargedAttackStartTime = DateTime.Now;
-
-            player.IsChargingAttack = true;
-
-            player.lastAttackTime = DateTime.Now;
-        }
-        private void EnhancedAttack()
-        {
-            RectangleF swordRect = new RectangleF(sword.X - sword.Width / 3, sword.Y - sword.Height / 2, sword.Width * 3f, sword.Height * 2);
-            foreach (var enemy in enemies)
-            {
-                Rectangle enemyRect = enemy.GetRectangle(this.ClientSize);
-
-                if (swordRect.IntersectsWith(enemyRect))
-                {
-                    HitDetectedSound.Play();
-                    enemy.TakeDamage(2000);
-
-                    if (enemy.IsDead())
-                    {
-                        toBeExploded.Add(enemy);
-                    }
-
-                    if (enemy.KnockbackTimer.ElapsedMilliseconds == 0)
-                    {
-                        enemy.KnockbackTimer.Start();
-                    }
-
-                    int knockbackDistance = (int)(this.ClientSize.Width * 0.03);
-                    int knockbackDirection = player.X < enemy.X ? 1 : -1;
-                    int proposedX = enemy.X + knockbackDistance * knockbackDirection;
-
-                    bool collisionDetected = false;
-
-                    foreach (var platformRect in platforms)
-                    {
-                        RectangleF rect = platformRect.ToRectangle(this.ClientSize);
-                        if (CheckCollision(proposedX, enemy.Y, enemy.Width, enemy.Height, rect.X, rect.Y, rect.Width, rect.Height))
-                        {
-                            collisionDetected = true;
-                            break;
-                        }
-                    }
-
-                    if (!collisionDetected)
-                    {
-                        enemy.X = proposedX;
-                    }
-
-                    enemy.VerticalSpeed = -enemy.JumpForce(this.ClientSize) / 8;
-                    enemy.IsOnGround = false;
-                    enemy.IsJumping = true;
-                }
+                SwordAttack.ChargingEnhancedAttack();
             }
         }
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -1791,7 +1651,7 @@ namespace SoloLeveling
             }
             if (e.KeyCode == Keys.F && player.IsOnGround && !player.IsChargingAttack)
             {
-                AttackWithSword();
+                SwordAttack.AttackWithSword();
             }
         }
         private void DrawPauseMenu(Graphics g)

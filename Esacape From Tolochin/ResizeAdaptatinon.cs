@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using static SoloLeveling.MainForm;
 using static SoloLeveling.AnimationManagaer;
 using System.Collections.Generic;
