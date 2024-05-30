@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Esacape_From_Tolochin.MainForm;
+using static SoloLeveling.MainForm;
+using static SoloLeveling.AnimationManagaer;
 using System.Windows.Forms;
 
-namespace Esacape_From_Tolochin
+namespace SoloLeveling
 {
-    internal class Player
+    public class Player
     {
         public int X { get; set; }
         public float XPercent { get; set; }

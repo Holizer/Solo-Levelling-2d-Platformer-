@@ -62,6 +62,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pickups.cs" />
+    <Compile Include="HealtBar.cs" />
+    <Compile Include="AnimationManager.cs" />
+    <Compile Include="ParticalLogic.cs" />
+    <Compile Include="ResizeAdaptatinon.cs" />
     <Compile Include="Sword.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Entity.cs" />

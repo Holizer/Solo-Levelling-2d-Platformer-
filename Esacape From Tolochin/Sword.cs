@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Drawing;
+using static SoloLeveling.MainForm;
+using static SoloLeveling.AnimationManagaer;
 
-namespace Esacape_From_Tolochin
+namespace SoloLeveling
 {
     internal class Sword
     {
@@ -30,5 +32,9 @@ namespace Esacape_From_Tolochin
 
             return new Rectangle((int)X, (int)Y, Width, Height);
         }
+    }
+    internal class SwordAttack
+    {
+
     }
 }

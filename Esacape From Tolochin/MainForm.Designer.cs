@@ -1,4 +1,4 @@
-﻿namespace Esacape_From_Tolochin
+﻿namespace SoloLeveling
 {
     partial class MainForm
     {
@@ -328,7 +328,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Solo Levelling";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.PauseMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.EndingPanel.ResumeLayout(false);

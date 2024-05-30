@@ -4,13 +4,14 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Esacape_From_Tolochin.MainForm;
+using static SoloLeveling.MainForm;
+using static SoloLeveling.AnimationManagaer;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace Esacape_From_Tolochin
+namespace SoloLeveling
 {
-    internal class Enemy
+    public class Enemy
     {
         public int X { get; set; }
         public float XPercent { get; set; }

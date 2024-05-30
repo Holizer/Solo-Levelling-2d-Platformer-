@@ -11,82 +11,19 @@ using System.IO;
 using System.Drawing.Text;
 using System.Media;
 using Button = System.Windows.Forms.Button;
-using static Esacape_From_Tolochin.Player;
-using static Esacape_From_Tolochin.Enemy;
+using static SoloLeveling.AnimationManagaer;
+using static SoloLeveling.Player;
+using static SoloLeveling.Enemy;
+using static SoloLeveling.ParticalLogic;
 
-namespace Esacape_From_Tolochin
+namespace SoloLeveling
 {
     public partial class MainForm : Form
     {
-        private Animation playerAFKAnimation;
-        private Animation playerMovingRightAnimation;
-        private Animation playerMovingLeftAnimation;
-        private Animation playerChargedAttackAnimation;
-        private Animation playerChargedLeftAttackAnimation;
-        private Animation playerDeathAnimation;
-        private Animation playerAttackAnimation;
-
-        private Animation enemyMovingAnimation;
-        public struct AnimationFrame
-        {
-            public Bitmap Frame { get; }
-            public RectangleF DisplayRectangle { get; }
-
-            public AnimationFrame(Bitmap frame, RectangleF displayRect)
-            {
-                Frame = frame;
-                DisplayRectangle = displayRect;
-            }
-        }
-        public struct Animation
-        {
-            public List<AnimationFrame> Frames { get; }
-            public int Interval { get; }
-
-            public Animation(List<AnimationFrame> frames, int interval)
-            {
-                Frames = frames;
-                Interval = interval;
-            }
-            public TimeSpan TotalDuration
-            {
-                get
-                {
-                    return TimeSpan.FromMilliseconds(Frames.Count * Interval);
-                }
-            }
-        }
-        private Animation CreateInvertedAnimation(Animation originalAnimation)
-        {
-            List<AnimationFrame> invertedFrames = new List<AnimationFrame>();
-
-            foreach (var frame in originalAnimation.Frames)
-            {
-                Bitmap invertedBitmap = new Bitmap(frame.Frame);
-                invertedBitmap.RotateFlip(RotateFlipType.RotateNoneFlipX);
-
-                // Инвертируем координаты X правильно для отраженного изображения
-                float invertedX = this.ClientSize.Width - frame.DisplayRectangle.Right - frame.DisplayRectangle.Width;
-
-                // Создаем новый прямоугольник с инвертированными координатами X
-                RectangleF invertedRect = new RectangleF(
-                    frame.DisplayRectangle.X * -1,
-                    frame.DisplayRectangle.Y,
-                    frame.DisplayRectangle.Width,
-                    frame.DisplayRectangle.Height
-                );
-
-                AnimationFrame invertedFrame = new AnimationFrame(invertedBitmap, invertedRect);
-                invertedFrames.Add(invertedFrame);
-            }
-
-            Animation invertedAnimation = new Animation(invertedFrames, originalAnimation.Interval);
-
-            return invertedAnimation;
-        }
-
-        private static string resourcesPath = Path.Combine(Application.StartupPath, @"..\..\Resources");
-        //private static string resourcesPath = Path.Combine(Application.StartupPath, "Resources");
+        public static string resourcesPath = Path.Combine(Application.StartupPath, @"..\..\Resources");
+        public static int clientWidth;
+        public static int clientHeight;
+        public static FormWindowState windowState;
 
         private SoundPlayer ChargedAttackSound = new SoundPlayer(Path.Combine(resourcesPath, "Sounds\\FateAttack.wav"));
         private SoundPlayer clickSound = new SoundPlayer(Path.Combine(resourcesPath, "Sounds\\Minecraft Menu Button Sound.wav"));
@@ -213,7 +150,7 @@ namespace Esacape_From_Tolochin
         private Timer deathOverlayTimer;
 
         private bool gamePaused = false;
-        private bool gameStarted = false;
+        public static bool gameStarted = false;
         private void InGameAnimation()
         {
             playerAFKAnimation = new Animation(new List<AnimationFrame>
@@ -396,9 +333,12 @@ namespace Esacape_From_Tolochin
             Main_Menu.Visible = false;
             gameStarted = true;
         }
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            InMenuMenuSound.Play();
+            //InMenuMenuSound.Play(); 
+            
+            clientWidth = this.ClientSize.Width;
+            clientHeight = this.ClientSize.Height;
 
             this.DoubleBuffered = true;
             LoadCustomFont();
@@ -491,6 +431,7 @@ namespace Esacape_From_Tolochin
         }
 
         private DateTime chargedAttackStartTime;
+
         private DateTime AttackStartTime;
         private void UpdatePlayerAnimation(object sender, EventArgs e)
         {
@@ -565,7 +506,7 @@ namespace Esacape_From_Tolochin
             }
             else if (!player.IsChargingAttack && player.IsAttack && !player.IsDead())
             {
-                currentAnimation = player.CurrentDirection == Player.Direction.Right ? CreateInvertedAnimation(playerAttackAnimation) : playerAttackAnimation;
+                currentAnimation = player.CurrentDirection == Player.Direction.Right ? AnimationManagaer.CreateInvertedAnimation(playerAttackAnimation) : playerAttackAnimation;
                 TimeSpan elapsed = DateTime.Now - AttackStartTime;
                 int directionX = player.CurrentDirection == Player.Direction.Right ? 1 : -1;
 
@@ -597,7 +538,7 @@ namespace Esacape_From_Tolochin
 
             else if (player.IsAFK())
             {
-                currentAnimation = player.CurrentDirection == Player.Direction.Left ? CreateInvertedAnimation(playerAFKAnimation) : playerAFKAnimation;
+                currentAnimation = player.CurrentDirection == Player.Direction.Left ? AnimationManagaer.CreateInvertedAnimation(playerAFKAnimation) : playerAFKAnimation;
                 player.CurrentAnimation = playerAFKAnimation;
                 playerAnimationTimer.Interval = playerAFKAnimation.Interval;
             }
@@ -665,7 +606,7 @@ namespace Esacape_From_Tolochin
                 }
                 else if (enemy.CurrentDirection == Enemy.EnemyDirection.Left)
                 {
-                    currentAnimation = CreateInvertedAnimation(enemyMovingAnimation);
+                    currentAnimation = AnimationManagaer.CreateInvertedAnimation(enemyMovingAnimation);
                     enemy.CurrentAnimation = currentAnimation;
                     enemyAnimationTimer.Interval = enemyMovingAnimation.Interval;
                 }
@@ -718,12 +659,12 @@ namespace Esacape_From_Tolochin
             return false;
         }
 
-        private int LevelLength;
-        private Player player;
+        public static int LevelLength;
+        public static Player player;
         private Sword sword;
-        private float Gravity;
+        public static float Gravity;
         private int cameraX = 0;
-        public static HealthBar healthBar;
+        internal static HealthBar healthBar;
         public class DynamicRectangle
         {
             public float X { get; set; }
@@ -750,6 +691,168 @@ namespace Esacape_From_Tolochin
         List<DynamicRectangle> ground;
         List<DynamicRectangle> platforms;
         List<FallingPickup> TolochinApple;
+
+        private void AdaptToResolution()
+        {
+            if ((originalResolution != Size.Empty && windowState != FormWindowState.Minimized) || GameIsRestarted)
+            {
+                float xRatio = (float)this.ClientSize.Width / originalResolution.Width;
+                float yRatio = (float)this.ClientSize.Height / originalResolution.Height;
+
+                LevelLength = (int)(LevelLength * xRatio);
+                traderZone = new TraderZone(traderZone.Bounds.X * xRatio, traderZone.Bounds.Y * yRatio, traderZone.Bounds.Width * xRatio, traderZone.Bounds.Height * yRatio);
+                Gravity *= yRatio;
+                healthBar.barWidth *= xRatio;
+                healthBar.barHeight *= xRatio;
+
+                player.X = (int)(player.X * xRatio);
+                player.Y = (int)(player.Y * yRatio);
+
+                if (!gameStarted)
+                {
+                    LoadingLabel.Location = new Point((int)Math.Round(LoadingLabel.Location.X * xRatio),
+                                                           (int)Math.Round(LoadingLabel.Location.Y * yRatio));
+
+                    LoadingLabel.Size = new Size((int)Math.Round(LoadingLabel.Width * xRatio),
+                                                 (int)Math.Round(LoadingLabel.Height * yRatio));
+
+                    ResizeAdaptatinon.AdaptFontSize(LoadingLabel, xRatio);
+                }
+
+                ResizeAdaptatinon.AdaptFallingPickUps(TolochinApple, xRatio, yRatio);
+                ResizeAdaptatinon.AdaptPeekUps(pickups, xRatio, yRatio);
+                ResizeAdaptatinon.AdaptDynamicRectangles(ground, xRatio, yRatio);
+                ResizeAdaptatinon.AdaptDynamicRectangles(platforms, xRatio, yRatio);
+
+                sword.X = (int)Math.Round(sword.X * xRatio);
+                sword.Y = (int)Math.Round(sword.Y * yRatio);
+
+                ResizeAdaptatinon.AdaptFontSize(Continue_btn, xRatio);
+                ResizeAdaptatinon.AdaptFontSize(LeaveToMainMenu_btn, xRatio);
+                ResizeAdaptatinon.AdaptFontSize(LeaveGame_btn, xRatio);
+                ResizeAdaptatinon.AdaptFontSize(EndingText, xRatio);
+
+                if (GameIsEnd)
+                {
+                    LeaveGame.Location = new Point((int)Math.Round(LeaveGame.Location.X * xRatio),
+                                                   (int)Math.Round(LeaveGame.Location.Y * yRatio));
+
+                    LeaveGame.Size = new Size((int)Math.Round(LeaveGame.Width * xRatio),
+                                               (int)Math.Round(LeaveGame.Height * yRatio));
+
+                    ResizeAdaptatinon.AdaptFontSize(LeaveGame, xRatio);
+
+                    EndingText.Size = new Size((int)Math.Round(EndingText.Width * xRatio),
+                                               (int)Math.Round(EndingText.Height * yRatio));
+
+                    IsItSecondLogo.Location = new Point((int)Math.Round(IsItSecondLogo.Location.X * xRatio),
+                                                        (int)Math.Round(IsItSecondLogo.Location.Y * yRatio));
+
+                    IsItSecondLogo.Size = new Size((int)Math.Round(IsItSecondLogo.Width * xRatio),
+                                                   (int)Math.Round(IsItSecondLogo.Height * yRatio));
+                }
+                ResizeAdaptatinon.AdaptAnimationFrames(playerAFKAnimation.Frames, xRatio, yRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerChargedAttackAnimation.Frames, xRatio, yRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerMovingLeftAnimation.Frames, xRatio, yRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerMovingRightAnimation.Frames, xRatio, yRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerDeathAnimation.Frames, xRatio, yRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerAttackAnimation.Frames, xRatio, yRatio);
+
+                ResizeAdaptatinon.AdaptAnimationFrames(enemyMovingAnimation.Frames, xRatio, yRatio);
+                foreach (var enemy in enemies.ToList())
+                {
+                    int newEnemyX = (int)(enemy.X * xRatio);
+                    int newEnemyY = (int)(enemy.Y * yRatio);
+
+                    enemy.X = newEnemyX;
+                    enemy.Y = newEnemyY;
+
+                    enemy.HorizontalSpeed = (int)Math.Round(enemy.HorizontalSpeed * xRatio);
+                    enemy.JumpSpeed = (int)Math.Round(enemy.JumpSpeed * yRatio);
+
+                    enemy.IsOnGround = false;
+                }
+                int newCameraX = (int)(cameraX * xRatio);
+                cameraX = newCameraX;
+
+                foreach (var particle in particles)
+                {
+                    particle.Size = (int)(xRatio * particle.Size);
+                    particle.SpeedX = xRatio * particle.SpeedX;
+                    particle.SpeedY = xRatio * particle.SpeedX;
+                }
+                Continue_btn.Location = new Point((int)Math.Round(Continue_btn.Location.X * xRatio),
+                                                    (int)Math.Round(Continue_btn.Location.Y * yRatio));
+
+                Continue_btn.Size = new Size((int)Math.Round(Continue_btn.Width * xRatio),
+                                                (int)Math.Round(Continue_btn.Height * yRatio));
+
+                LeaveToMainMenu_btn.Location = new Point((int)Math.Round(LeaveToMainMenu_btn.Location.X * xRatio),
+                                                            (int)Math.Round(LeaveToMainMenu_btn.Location.Y * yRatio));
+
+                LeaveToMainMenu_btn.Size = new Size((int)Math.Round(LeaveToMainMenu_btn.Width * xRatio),
+                                                    (int)Math.Round(LeaveToMainMenu_btn.Height * yRatio));
+
+                LeaveGame_btn.Location = new Point((int)Math.Round(LeaveGame_btn.Location.X * xRatio),
+                                                    (int)Math.Round(LeaveGame_btn.Location.Y * yRatio));
+
+                LeaveGame_btn.Size = new Size((int)Math.Round(LeaveGame_btn.Width * xRatio),
+                (int)Math.Round(LeaveGame_btn.Height * yRatio));
+                restartButton.Location = new Point((int)Math.Round(restartButton.Location.X * xRatio),
+                                                    (int)Math.Round(restartButton.Location.Y * yRatio));
+                restartButton.Size = new Size((int)Math.Round(restartButton.Width * xRatio),
+                                                (int)Math.Round(restartButton.Height * yRatio));
+                ResizeAdaptatinon.AdaptFontSize(restartButton, xRatio);
+
+                quitButton.Location = new Point((int)Math.Round(quitButton.Location.X * xRatio),
+                                                (int)Math.Round(quitButton.Location.Y * yRatio));
+
+                quitButton.Size = new Size((int)Math.Round(quitButton.Width * xRatio),
+                                            (int)Math.Round(quitButton.Height * yRatio));
+
+                ResizeAdaptatinon.AdaptFontSize(quitButton, xRatio);
+                if (!gameStarted)
+                {
+                    float newLogoX = logo.Location.X * xRatio;
+                    float newLogoY = logo.Location.Y * yRatio;
+
+                    float newLogoWidth = logo.Width * xRatio;
+                    float newLogoHeight = logo.Height * yRatio;
+
+                    logo.Location = new Point((int)Math.Round(newLogoX), (int)Math.Round(newLogoY));
+                    logo.Size = new Size((int)Math.Round(newLogoWidth), (int)Math.Round(newLogoHeight));
+
+                    float newButtonX = start_game_btn.Location.X * xRatio;
+                    float newButtonY = start_game_btn.Location.Y * yRatio;
+
+                    start_game_btn.Location = new Point((int)Math.Round(newButtonX), (int)Math.Round(newButtonY));
+
+                    float newButtonWidth = start_game_btn.Width * xRatio;
+                    float newButtonHeight = start_game_btn.Height * yRatio;
+
+                    start_game_btn.Size = new Size((int)Math.Round(newButtonWidth), (int)Math.Round(newButtonHeight));
+
+                    int newButtonX2 = (int)Math.Round(leave_game_btn.Location.X * xRatio);
+                    int newButtonY2 = (int)Math.Round(leave_game_btn.Location.Y * yRatio);
+
+                    leave_game_btn.Location = new Point(newButtonX2, newButtonY2);
+
+                    float newButtonWidth2 = leave_game_btn.Width * xRatio;
+                    float newButtonHeight2 = leave_game_btn.Height * yRatio;
+
+                    leave_game_btn.Size = new Size((int)Math.Round(newButtonWidth2), (int)Math.Round(newButtonHeight2));
+
+                    ResizeAdaptatinon.AdaptFontSize(start_game_btn, xRatio);
+                    ResizeAdaptatinon.AdaptFontSize(leave_game_btn, xRatio);
+                }
+                isBackgroundInvalidated = true;
+                backgroundBuffer = new Bitmap(LevelLength, this.ClientSize.Height * 2);
+            }
+            gamePaused = WindowState == FormWindowState.Minimized ? true : false;
+
+            originalResolution = this.ClientSize;
+        }
+
         public class TraderZone
         {
             public RectangleF Bounds { get; private set; }
@@ -759,7 +862,9 @@ namespace Esacape_From_Tolochin
                 Bounds = new RectangleF(x, y, width, height);
             }
         }
-        public TraderZone traderZone;
+
+        public static TraderZone traderZone;
+
         Bitmap sacredApple = new Bitmap(Path.Combine(resourcesPath, "blessing_apple.png"));
         Bitmap pickupTexture = new Bitmap(Path.Combine(resourcesPath, "golden-apple-minecraft.gif"));
         Bitmap playerTexture = new Bitmap(Path.Combine(resourcesPath, "Idle1.png"));
@@ -1168,113 +1273,7 @@ namespace Esacape_From_Tolochin
                 }
             }
         }
-        public class HealthBar
-        {
-            private int maxHealth;
-            private int currentHealth;
-            public float barWidth;
-            public float barHeight;
-            private Pen borderColor;
-
-            private float animationSpeed = 0.1f;
-            private float currentAnimatedWidth;
-
-            public HealthBar(int MaxHealth, int BarWidth, int BarHeight, Brush BarColor, Pen BorderColor)
-            {
-                maxHealth = MaxHealth;
-                currentHealth = maxHealth;
-                barWidth = BarWidth;
-                barHeight = BarHeight;
-                borderColor = BorderColor;
-                currentAnimatedWidth = barWidth;
-            }
-            public void UpdateMaxHealth(int newMaxHealth)
-            {
-                maxHealth = newMaxHealth;
-                currentHealth = Math.Min(maxHealth, currentHealth);
-            }
-            public void UpdateHealth(int currentHealth)
-            {
-                this.currentHealth = Math.Max(0, currentHealth);
-                this.currentHealth = Math.Min(maxHealth, this.currentHealth);
-
-                float targetWidth = (float)this.currentHealth / maxHealth * barWidth;
-                currentAnimatedWidth += (targetWidth - currentAnimatedWidth) * animationSpeed;
-            }
-            public void Draw(Graphics g, Size clientSize, int offsetX)
-            {
-                float healthPercent = (float)currentHealth / maxHealth;
-
-                int x = (int)(20f + offsetX);
-                int y = (int)(20f);
-
-                // Закругленный прямоугольник для закрашенной части полосы HP
-                DrawRoundedRectangle(g, borderColor, x, y, barWidth, barHeight, 5);
-
-                if (currentHealth > 0)
-                {
-                    GraphicsPath fillPath = CreateRoundedRectanglePath(x, y, currentAnimatedWidth, barHeight, 5);
-
-                    Color startColor = Color.FromArgb(0, 210, 0);
-                    Color endColor = Color.FromArgb(0, 100, 0);
-
-                    LinearGradientBrush fillBrush = new LinearGradientBrush(
-                        new Rectangle(x, y, (int)currentAnimatedWidth, (int)barHeight),
-                        startColor,
-                        endColor,
-                        LinearGradientMode.Vertical);
-
-                    g.FillPath(fillBrush, fillPath);
-
-                    if (!(currentAnimatedWidth == 0))
-                    {
-                        DrawRoundedRectangle(g, borderColor, x, y, currentAnimatedWidth, barHeight, 5);
-                    }
-                }
-
-                string healthText = $"{currentHealth}/{maxHealth}";
-                Font baseFont = LoadFont(Path.Combine(resourcesPath, "Font\\Planes_ValMore.ttf"), 7);
-
-                float fontSize = FindAdaptiveFontSize(g, healthText, barWidth, barHeight, clientSize, baseFont);
-                Font font = new Font(baseFont.FontFamily, fontSize);
-                SizeF textSize = g.MeasureString(healthText, font);
-
-                float textX = x + (barWidth - textSize.Width) / 2;
-                float textY = y + (int)((barHeight - textSize.Height) / 1.5);
-
-                g.DrawString(healthText, font, Brushes.White, textX, textY);
-            }
-            private GraphicsPath CreateRoundedRectanglePath(float x, float y, float width, float height, float radius)
-            {
-                GraphicsPath path = new GraphicsPath();
-                float diameter = radius * 2;
-
-                RectangleF arc = new RectangleF(x, y, diameter, diameter);
-                path.AddArc(arc, 180, 90);
-                arc.X = x + width - diameter;
-                path.AddArc(arc, 270, 90);
-                arc.Y = y + height - diameter;
-                path.AddArc(arc, 0, 90);
-                arc.X = x;
-                path.AddArc(arc, 90, 90);
-
-                path.CloseFigure();
-
-                return path;
-            }
-            private void DrawRoundedRectangle(Graphics g, Pen pen, float x, float y, float width, float height, float radius)
-            {
-                GraphicsPath path = CreateRoundedRectanglePath(x, y, width, height, radius);
-                g.DrawPath(pen, path);
-            }
-        }
-        private static Font LoadFont(string fullPathToFont, float fontSize)
-        {
-            PrivateFontCollection pfc = new PrivateFontCollection();
-            pfc.AddFontFile(fullPathToFont);
-            return new Font(pfc.Families[0], fontSize, FontStyle.Regular);
-        }
-        private static float FindAdaptiveFontSize(Graphics g, string text, float maxWidth, float maxHeight, Size clientSize, Font prototypeFont)
+        public static float FindAdaptiveFontSize(Graphics g, string text, float maxWidth, float maxHeight, Size clientSize, Font prototypeFont)
         {
             float fontSize = prototypeFont.Size;
 
@@ -1301,64 +1300,8 @@ namespace Esacape_From_Tolochin
         private bool f11KeyPressed = false;
         private Stopwatch YouAreDeadTimer = new Stopwatch();
         private bool isBackgroundInvalidated = true;
-        Bitmap ExpParticleTexture = new Bitmap(Path.Combine(resourcesPath, "ExpPariticle.png"));
-        private Random random = new Random();
-        private static List<Particle> particles = new List<Particle>();
-        private Size originalResolution;
-        public class Particle
-        {
-            public int X { get; set; }
-            public int Y { get; set; }
-            public float SpeedX { get; set; }
-            public float SpeedY { get; set; }
-            public float Friction { get; set; }
-            public int Size { get; set; }
-            public Color ParticleColor { get; set; }
-            public Bitmap Texture { get; set; }
-        }
-        void ExplodeEnemy(Enemy enemy)
-        {
-            int numDeathParticles = 10;
-            for (int i = 0; i < numDeathParticles; i++)
-            {
-                Particle deathParticle = new Particle();
-                deathParticle.X = enemy.X + enemy.Width / 2;
-                deathParticle.Y = enemy.Y + enemy.Height / 2;
-                deathParticle.SpeedX = (float)(random.NextDouble() * 8 - 5);
-                deathParticle.SpeedY = (float)(random.NextDouble() * 8 - 5);
-                deathParticle.Friction = 0.02f;
-                deathParticle.Size = (int)(this.ClientSize.Width * 0.006);
-                deathParticle.ParticleColor = Color.Red;
-                particles.Add(deathParticle);
-            }
-        }
-        void SpawnExperienceParticles(Enemy enemy)
-        {
-            int numExperienceParticles = 3;
-
-            for (int i = 0; i < numExperienceParticles; i++)
-            {
-                Particle experienceParticle = new Particle();
-
-                float randomXOffset = (float)(random.NextDouble() * 20 - 10);
-                float randomYOffset = (float)(random.NextDouble() * 20 - 10);
-
-                experienceParticle.X = enemy.X + (int)randomXOffset;
-                experienceParticle.Y = enemy.Y + (int)randomYOffset;
-
-                experienceParticle.SpeedX = 2.5f;
-                experienceParticle.Size = (int)(this.ClientSize.Width * 0.008);
-                experienceParticle.Texture = ExpParticleTexture;
-                particles.Add(experienceParticle);
-            }
-        }
-        public class MathHelper
-        {
-            public static float Lerp(float start, float end, float amount)
-            {
-                return start + (end - start) * amount;
-            }
-        }
+        public static Bitmap ExpParticleTexture = new Bitmap(Path.Combine(resourcesPath, "ExpPariticle.png"));
+        public static Size originalResolution;
         void MoveExperienceParticleTowardsPlayer(Particle particle)
         {
             float targetX = player.X < particle.X ? player.X - player.Width / 2 : player.X + player.Width / 2;
@@ -1380,17 +1323,6 @@ namespace Esacape_From_Tolochin
                 player.GainExperience(20);
             }
         }
-        void MoveDeathParticle(Particle particle)
-        {
-            float randomFactorX = (float)(random.NextDouble() * 0.5 - 0.1);
-            float randomFactorY = (float)(random.NextDouble() * 1.0 - 0.15);
-
-            particle.SpeedX += randomFactorX;
-            particle.SpeedY += randomFactorY;
-
-            particle.X += (int)particle.SpeedX;
-            particle.Y += (int)particle.SpeedY;
-        }
         void UpdateParticles()
         {
             for (int i = particles.Count - 1; i >= 0; i--)
@@ -1403,7 +1335,7 @@ namespace Esacape_From_Tolochin
                 }
                 else if (particle.ParticleColor == Color.Red)
                 {
-                    MoveDeathParticle(particle);
+                    ParticalLogic.MoveDeathParticle(particle);
                 }
 
                 if (particle.X > cameraX + this.ClientSize.Width || particle.X < 0 || particle.Y > this.ClientSize.Height || particle.Y < 0)
@@ -1412,8 +1344,9 @@ namespace Esacape_From_Tolochin
                 }
             }
         }
+
         private bool GameIsEnd = false;
-        private bool GameIsRestarted = false;
+        public static bool GameIsRestarted = false;
         private void UpdateGame(object sender, EventArgs e)
         {
             if (!gameStarted || gamePaused || PauseMenu.Visible)
@@ -1504,7 +1437,7 @@ namespace Esacape_From_Tolochin
 
             foreach (var enemy in toBeExploded.ToList())
             {
-                ExplodeEnemy(enemy);
+                ParticalLogic.ExplodeEnemy(enemy);
                 SpawnExperienceParticles(enemy);
                 toBeExploded.Remove(enemy);
             }
@@ -1537,217 +1470,7 @@ namespace Esacape_From_Tolochin
             this.Invalidate();
             frameCount++;
         }
-        private void AdaptToResolution()
-        {
-            if ((originalResolution != Size.Empty && WindowState != FormWindowState.Minimized) || GameIsRestarted)
-            {
-                float xRatio = (float)this.ClientSize.Width / originalResolution.Width;
-                float yRatio = (float)this.ClientSize.Height / originalResolution.Height;
 
-                LevelLength = (int)(LevelLength * xRatio);
-                traderZone = new TraderZone(traderZone.Bounds.X * xRatio, traderZone.Bounds.Y * yRatio, traderZone.Bounds.Width * xRatio, traderZone.Bounds.Height * yRatio);
-                Gravity *= yRatio;
-                healthBar.barWidth *= xRatio;
-                healthBar.barHeight *= xRatio;
-
-                player.X = (int)(player.X * xRatio);
-                player.Y = (int)(player.Y * yRatio);
-
-                if (!gameStarted)
-                {
-                    LoadingLabel.Location = new Point((int)Math.Round(LoadingLabel.Location.X * xRatio),
-                                                           (int)Math.Round(LoadingLabel.Location.Y * yRatio));
-
-                    LoadingLabel.Size = new Size((int)Math.Round(LoadingLabel.Width * xRatio),
-                                                 (int)Math.Round(LoadingLabel.Height * yRatio));
-
-                    AdaptFontSize(LoadingLabel, xRatio);
-                }
-
-                AdaptFallingPickUps(TolochinApple, xRatio, yRatio);
-                AdaptPeekUps(pickups, xRatio, yRatio);
-                AdaptDynamicRectangles(ground, xRatio, yRatio);
-                AdaptDynamicRectangles(platforms, xRatio, yRatio);
-
-                sword.X = (int)Math.Round(sword.X * xRatio);
-                sword.Y = (int)Math.Round(sword.Y * yRatio);
-
-                AdaptFontSize(Continue_btn, xRatio);
-                AdaptFontSize(LeaveToMainMenu_btn, xRatio);
-                AdaptFontSize(LeaveGame_btn, xRatio);
-                AdaptFontSize(EndingText, xRatio);
-
-                if (GameIsEnd)
-                {
-                    LeaveGame.Location = new Point((int)Math.Round(LeaveGame.Location.X * xRatio),
-                                                   (int)Math.Round(LeaveGame.Location.Y * yRatio));
-
-                    LeaveGame.Size = new Size((int)Math.Round(LeaveGame.Width * xRatio),
-                                               (int)Math.Round(LeaveGame.Height * yRatio));
-
-                    AdaptFontSize(LeaveGame, xRatio);
-
-                    EndingText.Size = new Size((int)Math.Round(EndingText.Width * xRatio),
-                                               (int)Math.Round(EndingText.Height * yRatio));
-
-                    IsItSecondLogo.Location = new Point((int)Math.Round(IsItSecondLogo.Location.X * xRatio),
-                                                        (int)Math.Round(IsItSecondLogo.Location.Y * yRatio));
-
-                    IsItSecondLogo.Size = new Size((int)Math.Round(IsItSecondLogo.Width * xRatio),
-                                                   (int)Math.Round(IsItSecondLogo.Height * yRatio));
-                }
-                AdaptAnimationFrames(playerAFKAnimation.Frames, xRatio, yRatio);
-                AdaptAnimationFrames(playerChargedAttackAnimation.Frames, xRatio, yRatio);
-                AdaptAnimationFrames(playerMovingLeftAnimation.Frames, xRatio, yRatio);
-                AdaptAnimationFrames(playerMovingRightAnimation.Frames, xRatio, yRatio);
-                AdaptAnimationFrames(playerDeathAnimation.Frames, xRatio, yRatio);
-                AdaptAnimationFrames(playerAttackAnimation.Frames, xRatio, yRatio);
-
-                AdaptAnimationFrames(enemyMovingAnimation.Frames, xRatio, yRatio);
-                foreach (var enemy in enemies.ToList())
-                {
-                    int newEnemyX = (int)(enemy.X * xRatio);
-                    int newEnemyY = (int)(enemy.Y * yRatio);
-
-                    enemy.X = newEnemyX;
-                    enemy.Y = newEnemyY;
-
-                    enemy.HorizontalSpeed = (int)Math.Round(enemy.HorizontalSpeed * xRatio);
-                    enemy.JumpSpeed = (int)Math.Round(enemy.JumpSpeed * yRatio);
-
-                    enemy.IsOnGround = false;
-                }
-                int newCameraX = (int)(cameraX * xRatio);
-                cameraX = newCameraX;
-
-                foreach (var particle in particles)
-                {
-                    particle.Size = (int)(xRatio * particle.Size);
-                    particle.SpeedX = xRatio * particle.SpeedX;
-                    particle.SpeedY = xRatio * particle.SpeedX;
-                }
-                Continue_btn.Location = new Point((int)Math.Round(Continue_btn.Location.X * xRatio),
-                                                    (int)Math.Round(Continue_btn.Location.Y * yRatio));
-
-                Continue_btn.Size = new Size((int)Math.Round(Continue_btn.Width * xRatio),
-                                                (int)Math.Round(Continue_btn.Height * yRatio));
-
-                LeaveToMainMenu_btn.Location = new Point((int)Math.Round(LeaveToMainMenu_btn.Location.X * xRatio),
-                                                            (int)Math.Round(LeaveToMainMenu_btn.Location.Y * yRatio));
-
-                LeaveToMainMenu_btn.Size = new Size((int)Math.Round(LeaveToMainMenu_btn.Width * xRatio),
-                                                    (int)Math.Round(LeaveToMainMenu_btn.Height * yRatio));
-
-                LeaveGame_btn.Location = new Point((int)Math.Round(LeaveGame_btn.Location.X * xRatio),
-                                                    (int)Math.Round(LeaveGame_btn.Location.Y * yRatio));
-
-                LeaveGame_btn.Size = new Size((int)Math.Round(LeaveGame_btn.Width * xRatio),
-                                                      (int)Math.Round(LeaveGame_btn.Height * yRatio));
-
-                restartButton.Location = new Point((int)Math.Round(restartButton.Location.X * xRatio),
-                                                    (int)Math.Round(restartButton.Location.Y * yRatio));
-                restartButton.Size = new Size((int)Math.Round(restartButton.Width * xRatio),
-                                                (int)Math.Round(restartButton.Height * yRatio));
-                AdaptFontSize(restartButton, xRatio);
-
-                quitButton.Location = new Point((int)Math.Round(quitButton.Location.X * xRatio),
-                                                (int)Math.Round(quitButton.Location.Y * yRatio));
-
-                quitButton.Size = new Size((int)Math.Round(quitButton.Width * xRatio),
-                                            (int)Math.Round(quitButton.Height * yRatio));
-
-                AdaptFontSize(quitButton, xRatio);
-                if (!gameStarted)
-                {
-                    float newLogoX = logo.Location.X * xRatio;
-                    float newLogoY = logo.Location.Y * yRatio;
-
-                    float newLogoWidth = logo.Width * xRatio;
-                    float newLogoHeight = logo.Height * yRatio;
-
-                    logo.Location = new Point((int)Math.Round(newLogoX), (int)Math.Round(newLogoY));
-                    logo.Size = new Size((int)Math.Round(newLogoWidth), (int)Math.Round(newLogoHeight));
-
-                    float newButtonX = start_game_btn.Location.X * xRatio;
-                    float newButtonY = start_game_btn.Location.Y * yRatio;
-
-                    start_game_btn.Location = new Point((int)Math.Round(newButtonX), (int)Math.Round(newButtonY));
-
-                    float newButtonWidth = start_game_btn.Width * xRatio;
-                    float newButtonHeight = start_game_btn.Height * yRatio;
-
-                    start_game_btn.Size = new Size((int)Math.Round(newButtonWidth), (int)Math.Round(newButtonHeight));
-
-                    int newButtonX2 = (int)Math.Round(leave_game_btn.Location.X * xRatio);
-                    int newButtonY2 = (int)Math.Round(leave_game_btn.Location.Y * yRatio);
-
-                    leave_game_btn.Location = new Point(newButtonX2, newButtonY2);
-
-                    float newButtonWidth2 = leave_game_btn.Width * xRatio;
-                    float newButtonHeight2 = leave_game_btn.Height * yRatio;
-
-                    leave_game_btn.Size = new Size((int)Math.Round(newButtonWidth2), (int)Math.Round(newButtonHeight2));
-
-                    AdaptFontSize(start_game_btn, xRatio);
-                    AdaptFontSize(leave_game_btn, xRatio);
-                }
-                isBackgroundInvalidated = true;
-                backgroundBuffer = new Bitmap(LevelLength, this.ClientSize.Height * 2);
-            }
-            gamePaused = WindowState == FormWindowState.Minimized ? true : false;
-
-            originalResolution = this.ClientSize;
-        }
-        private void AdaptAnimationFrames(List<AnimationFrame> frames, float xRatio, float yRatio)
-        {
-            for (int i = 0; i < frames.Count; i++)
-            {
-                var frame = frames[i];
-                var displayRect = frame.DisplayRectangle;
-
-                float adaptedX = displayRect.X * xRatio;
-                float adaptedY = displayRect.Y * yRatio;
-                float adaptedWidth = displayRect.Width * xRatio;
-                float adaptedHeight = displayRect.Height * yRatio;
-
-                frames[i] = new AnimationFrame(frame.Frame, new RectangleF(adaptedX, adaptedY, adaptedWidth, adaptedHeight));
-            }
-        }
-        private void AdaptDynamicRectangles(List<DynamicRectangle> rectangles, float xRatio, float yRatio)
-        {
-            foreach (var rect in rectangles)
-            {
-                rect.X = rect.X * xRatio;
-                rect.Y = rect.Y * yRatio;
-                rect.Width = rect.Width * xRatio;
-                rect.Height = rect.Height * yRatio;
-            }
-        }
-        private void AdaptFontSize(Control control, float xRatio)
-        {
-            float newSize = control.Font.Size * xRatio;
-            control.Font = new Font(control.Font.FontFamily, newSize, control.Font.Style);
-        }
-        private void AdaptPeekUps(List<Pickup> rectangles, float xRatio, float yRatio)
-        {
-            foreach (var rect in rectangles)
-            {
-                rect.X = rect.X * xRatio;
-                rect.Y = rect.Y * yRatio;
-                rect.Width = rect.Width * xRatio;
-                rect.Height = rect.Height * yRatio;
-            }
-        }
-        private void AdaptFallingPickUps(List<FallingPickup> rectangles, float xRatio, float yRatio)
-        {
-            foreach (var rect in rectangles)
-            {
-                rect.X = rect.X * xRatio;
-                rect.Y = rect.Y * yRatio;
-                rect.Width = rect.Width * xRatio;
-                rect.Height = rect.Height * yRatio;
-            }
-        }
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
@@ -2079,7 +1802,7 @@ namespace Esacape_From_Tolochin
         }
         private void start_game_btn_Click(object sender, EventArgs e)
         {
-            InMenuMenuSound.Stop();
+            //InMenuMenuSound.Stop();
             LoadingScreen.Visible = true;
             loadingTimer.Start();
             gamePaused = false;
@@ -2107,7 +1830,7 @@ namespace Esacape_From_Tolochin
             PauseMenu.Visible = false;
             gamePaused = true;
             Main_Menu.Visible = true;
-            InMenuMenuSound.Play();
+            //InMenuMenuSound.Play();
             gameStarted = false;
         }
         private void LeaveGame_Click(object sender, EventArgs e)
