@@ -70,7 +70,7 @@ namespace SoloLeveling
 
                 if (swordRect.IntersectsWith(enemyRect))
                 {
-                    HitDetectedSound.Play();
+                    SoundManager.PlayHitSound();
                     enemy.TakeDamage(sword.Damage);
 
                     if (enemy.IsDead())
@@ -134,7 +134,7 @@ namespace SoloLeveling
 
                 if (swordRect.IntersectsWith(enemyRect))
                 {
-                    HitDetectedSound.Play();
+                    SoundManager.PlayHitSound();
                     enemy.TakeDamage(2000);
 
                     if (enemy.IsDead())

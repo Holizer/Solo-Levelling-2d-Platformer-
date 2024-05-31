@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using static SoloLeveling.Player;
 using static SoloLeveling.MainForm;
 using static SoloLeveling.AnimationManagaer;
+using System.Windows.Forms;
 
 namespace SoloLeveling
 {
@@ -292,7 +293,30 @@ namespace SoloLeveling
             g.DrawString(levelText, levelFont, Brushes.White, levelTextLocation);
             g.DrawString(experienceText, levelFont, Brushes.White, experienceTextLocation);
         }
-        public static void DrawPlayerDeath(Graphics g)
+        private static void TryMovePlayer(int deltaX)
+        {
+            int proposedX = player.X + deltaX;
+            bool willCollide = WillCollideWithObstacles(proposedX, player.Y, player.Width, player.Height);
+
+            if (!willCollide)
+            {
+                player.X = proposedX;
+            }
+        }
+        public static void DrawDeath(Graphics g) {
+            if (isGameOver && YouAreDeadTimer.ElapsedMilliseconds > 2500 && player.IsDead() && !GameIsEnd)
+            {
+                DrawPlayerDeath(g);
+            }
+            else if (isGameOver && YouAreDeadTimer.ElapsedMilliseconds > 1500 && player.IsDead() && GameIsEnd)
+            {
+                Color overlayColor = Color.FromArgb(overlayAlpha, 0, 0, 0);
+                Brush overlayBrush = new SolidBrush(overlayColor);
+
+                g.FillRectangle(overlayBrush, cameraX, 0, clientSize.Width, clientSize.Height);
+            }
+        }
+        private static void DrawPlayerDeath(Graphics g)
         {
             string deathText = "ВЫ ПОГИБЛИ";
             DeathFont = new Font(privateFontCollection.Families.First(f => f.Name == "Planes_ValMore"), (int)(clientWidth * 0.05), FontStyle.Bold);
@@ -311,17 +335,9 @@ namespace SoloLeveling
 
             g.DrawString(deathText, DeathFont, Brushes.Red, DeathTextLocation);
         }
-        private static void TryMovePlayer(int deltaX)
-        {
-            int proposedX = player.X + deltaX;
-            bool willCollide = WillCollideWithObstacles(proposedX, player.Y, player.Width, player.Height);
-
-            if (!willCollide)
-            {
-                player.X = proposedX;
-            }
-        }
-        public static void DrawPauseMenu(Graphics g)
+        
+        // Отрисовка фона меню паузы
+        public static void DrawPauseMenu_BG(Graphics g)
         {
             Color overlayColor = Color.FromArgb(160, 0, 0, 0);
             Brush overlayBrush = new SolidBrush(overlayColor);

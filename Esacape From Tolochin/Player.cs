@@ -102,7 +102,7 @@ namespace SoloLeveling
         }
         private void LevelUp()
         {
-            LevelUpSound.Play();
+            SoundManager.PlayLevelUpSound();
             Level++;
             MaxHealth += 20;
             Experience = 0;
