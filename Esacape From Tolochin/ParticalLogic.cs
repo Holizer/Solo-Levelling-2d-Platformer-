@@ -32,7 +32,7 @@ namespace SoloLeveling
                 deathParticle.SpeedX = (float)(random.NextDouble() * 8 - 5);
                 deathParticle.SpeedY = (float)(random.NextDouble() * 8 - 5);
                 deathParticle.Friction = 0.02f;
-                deathParticle.Size = (int)(clientWidth * 0.006);
+                deathParticle.Size = (int)(clientSize.Width * 0.006);
                 deathParticle.ParticleColor = Color.Red;
                 particles.Add(deathParticle);
             }
@@ -52,7 +52,7 @@ namespace SoloLeveling
                 experienceParticle.Y = enemy.Y + (int)randomYOffset;
 
                 experienceParticle.SpeedX = 2.5f;
-                experienceParticle.Size = (int)(clientWidth * 0.008);
+                experienceParticle.Size = (int)(clientSize.Width * 0.008);
                 experienceParticle.Texture = ExpParticleTexture;
                 particles.Add(experienceParticle);
             }
@@ -108,7 +108,7 @@ namespace SoloLeveling
                     MoveDeathParticle(particle);
                 }
 
-                if (particle.X > cameraX + clientWidth || particle.X < 0 || particle.Y > clientHeight || particle.Y < 0)
+                if (particle.X > cameraX + clientSize.Width || particle.X < 0 || particle.Y > clientSize.Height || particle.Y < 0)
                 {
                     particles.RemoveAt(i);
                 }

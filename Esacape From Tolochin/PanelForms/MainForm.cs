@@ -19,8 +19,6 @@ namespace SoloLeveling
     {
 
         public static readonly string resourcesPath = Path.Combine(Application.StartupPath, @"..\..\Resources");
-        public static int clientWidth;
-        public static int clientHeight;
         public static Size clientSize;
         public static FormWindowState windowState;
 
@@ -133,6 +131,7 @@ namespace SoloLeveling
         // Загрука формы
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // Громкость игры
             SoundManager.SetVolume(.3f);
 
             this.DoubleBuffered = true;
@@ -141,23 +140,27 @@ namespace SoloLeveling
             this.BringToFront();
             //InMenuMenuSound.Play(); 
 
+            // Получение размера окна для остальных модулей 
             clientSize = this.ClientSize;
-            clientWidth = clientSize.Width;
-            clientHeight = clientSize.Height;
      
+            // Загрузка шрифта
             LoadCustomFont();
 
-            this.MinimumSize = new Size(this.Width, this.Height);
-
-            ApplyCustomFont(StartGameBTN, "Planes_ValMore", 18);
-
-            ApplyCustomFont(LeaveGameBTN, "Planes_ValMore", 18);
-            StartGameBTN.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            LeaveGameBTN.FlatAppearance.MouseOverBackColor = Color.Transparent;
-
+            // Применяем кастомизацию стиля для кнопок
+            CastomizeButton(StartGameBTN);
+            CastomizeButton(SettingsBTN);
+            CastomizeButton(AboutGameBTN);
+            CastomizeButton(LeaveGameBTN);
+        }
+        private static void CastomizeButton(Button button, int FontSize = 18)
+        {
+            ApplyCustomFont(button, "Planes_ValMore", FontSize);
+            
+            // Устанавливаем прозрачный цвет фона при наведении
+            button.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            
             // Устанавливаем прозрачный цвет фона при нажатии
-            StartGameBTN.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            LeaveGameBTN.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            button.FlatAppearance.MouseDownBackColor = Color.Transparent;
         }
         public static void LoadCustomFont()
         {
@@ -289,103 +292,6 @@ namespace SoloLeveling
         public static List<DynamicRectangle> ground;
         public static List<DynamicRectangle> platforms;
         List<FallingPickup> TolochinApple;
-
-        private void AdaptToResolution()
-        {
-            if ((originalResolution != Size.Empty && windowState != FormWindowState.Minimized) || GameIsRestarted)
-            {
-                float xRatio = (float)this.ClientSize.Width / originalResolution.Width;
-                float yRatio = (float)this.ClientSize.Height / originalResolution.Height;
-
-                LevelLength = (int)(LevelLength * xRatio);
-                traderZone = new TraderZone(traderZone.Bounds.X * xRatio, traderZone.Bounds.Y * yRatio, traderZone.Bounds.Width * xRatio, traderZone.Bounds.Height * yRatio);
-                Gravity *= yRatio;
-                healthBar.barWidth *= xRatio;
-                healthBar.barHeight *= xRatio;
-
-                player.X = (int)(player.X * xRatio);
-                player.Y = (int)(player.Y * yRatio);
-
-                ResizeAdaptatinon.AdaptFallingPickUps(TolochinApple, xRatio, yRatio);
-                ResizeAdaptatinon.AdaptPeekUps(pickups, xRatio, yRatio);
-                ResizeAdaptatinon.AdaptDynamicRectangles(ground, xRatio, yRatio);
-                ResizeAdaptatinon.AdaptDynamicRectangles(platforms, xRatio, yRatio);
-
-                sword.X = (int)Math.Round(sword.X * xRatio);
-                sword.Y = (int)Math.Round(sword.Y * yRatio);
-
-                ResizeAdaptatinon.AdaptAnimationFrames(playerAFKAnimation.Frames, xRatio, yRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerChargedAttackAnimation.Frames, xRatio, yRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerMovingLeftAnimation.Frames, xRatio, yRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerMovingRightAnimation.Frames, xRatio, yRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerDeathAnimation.Frames, xRatio, yRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerAttackAnimation.Frames, xRatio, yRatio);
-
-                ResizeAdaptatinon.AdaptAnimationFrames(enemyMovingAnimation.Frames, xRatio, yRatio);
-                foreach (var enemy in enemies.ToList())
-                {
-                    int newEnemyX = (int)(enemy.X * xRatio);
-                    int newEnemyY = (int)(enemy.Y * yRatio);
-
-                    enemy.X = newEnemyX;
-                    enemy.Y = newEnemyY;
-
-                    enemy.HorizontalSpeed = (int)Math.Round(enemy.HorizontalSpeed * xRatio);
-                    enemy.JumpSpeed = (int)Math.Round(enemy.JumpSpeed * yRatio);
-
-                    enemy.IsOnGround = false;
-                }
-                int newCameraX = (int)(cameraX * xRatio);
-                cameraX = newCameraX;
-
-                foreach (var particle in particles)
-                {
-                    particle.Size = (int)(xRatio * particle.Size);
-                    particle.SpeedX = xRatio * particle.SpeedX;
-                    particle.SpeedY = xRatio * particle.SpeedX;
-                }
-
-                if (!gameStarted)
-                {
-                    float newLogoX = logo.Location.X * xRatio;
-                    float newLogoY = logo.Location.Y * yRatio;
-
-                    float newLogoWidth = logo.Width * xRatio;
-                    float newLogoHeight = logo.Height * yRatio;
-
-                    logo.Location = new Point((int)Math.Round(newLogoX), (int)Math.Round(newLogoY));
-                    logo.Size = new Size((int)Math.Round(newLogoWidth), (int)Math.Round(newLogoHeight));
-
-                    float newButtonX = StartGameBTN.Location.X * xRatio;
-                    float newButtonY = StartGameBTN.Location.Y * yRatio;
-
-                    StartGameBTN.Location = new Point((int)Math.Round(newButtonX), (int)Math.Round(newButtonY));
-
-                    float newButtonWidth = StartGameBTN.Width * xRatio;
-                    float newButtonHeight = StartGameBTN.Height * yRatio;
-
-                    StartGameBTN.Size = new Size((int)Math.Round(newButtonWidth), (int)Math.Round(newButtonHeight));
-
-                    int newButtonX2 = (int)Math.Round(LeaveGameBTN.Location.X * xRatio);
-                    int newButtonY2 = (int)Math.Round(LeaveGameBTN.Location.Y * yRatio);
-
-                    LeaveGameBTN.Location = new Point(newButtonX2, newButtonY2);
-
-                    float newButtonWidth2 = LeaveGameBTN.Width * xRatio;
-                    float newButtonHeight2 = LeaveGameBTN.Height * yRatio;
-
-                    LeaveGameBTN.Size = new Size((int)Math.Round(newButtonWidth2), (int)Math.Round(newButtonHeight2));
-
-                    ResizeAdaptatinon.AdaptFontSize(StartGameBTN, xRatio);
-                    ResizeAdaptatinon.AdaptFontSize(LeaveGameBTN, xRatio);
-                }
-                isBackgroundInvalidated = true;
-                backgroundBuffer = new Bitmap(LevelLength, this.ClientSize.Height * 2);
-            }
-            gamePaused = WindowState == FormWindowState.Minimized ? true : false;
-
-            originalResolution = this.ClientSize;
-        }
         public class TraderZone
         {
             public RectangleF Bounds { get; private set; }
@@ -651,6 +557,102 @@ namespace SoloLeveling
             AdaptToResolution();
             Invalidate();
         }
+        private void AdaptToResolution()
+        {
+            if ((originalResolution != Size.Empty && windowState != FormWindowState.Minimized))
+            {
+                float widthRatio = (float)this.ClientSize.Width / originalResolution.Width;
+                float heightRatio = (float)this.ClientSize.Height / originalResolution.Height;
+
+                LevelLength = (int)(LevelLength * widthRatio);
+                traderZone = new TraderZone(traderZone.Bounds.X * widthRatio, traderZone.Bounds.Y * heightRatio, traderZone.Bounds.Width * widthRatio, traderZone.Bounds.Height * heightRatio);
+                Gravity *= heightRatio;
+                healthBar.barWidth *= widthRatio;
+                healthBar.barHeight *= widthRatio;
+
+                player.X = (int)(player.X * widthRatio);
+                player.Y = (int)(player.Y * heightRatio);
+
+                ResizeAdaptatinon.AdaptFallingPickUps(TolochinApple, widthRatio, heightRatio);
+                ResizeAdaptatinon.AdaptPeekUps(pickups, widthRatio, heightRatio);
+                ResizeAdaptatinon.AdaptDynamicRectangles(ground, widthRatio, heightRatio);
+                ResizeAdaptatinon.AdaptDynamicRectangles(platforms, widthRatio, heightRatio);
+
+                sword.X = (int)Math.Round(sword.X * widthRatio);
+                sword.Y = (int)Math.Round(sword.Y * widthRatio);
+
+                ResizeAdaptatinon.AdaptAnimationFrames(playerAFKAnimation.Frames, widthRatio, heightRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerChargedAttackAnimation.Frames, widthRatio, heightRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerMovingLeftAnimation.Frames, widthRatio, heightRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerMovingRightAnimation.Frames, widthRatio, heightRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerDeathAnimation.Frames, widthRatio, heightRatio);
+                ResizeAdaptatinon.AdaptAnimationFrames(playerAttackAnimation.Frames, widthRatio, heightRatio);
+
+                ResizeAdaptatinon.AdaptAnimationFrames(enemyMovingAnimation.Frames, widthRatio, heightRatio);
+                foreach (var enemy in enemies.ToList())
+                {
+                    int newEnemyX = (int)(enemy.X * widthRatio);
+                    int newEnemyY = (int)(enemy.Y * heightRatio);
+
+                    enemy.X = newEnemyX;
+                    enemy.Y = newEnemyY;
+
+                    enemy.HorizontalSpeed = (int)Math.Round(enemy.HorizontalSpeed * widthRatio);
+                    enemy.JumpSpeed = (int)Math.Round(enemy.JumpSpeed * heightRatio);
+
+                    enemy.IsOnGround = false;
+                }
+                int newCameraX = (int)(cameraX * widthRatio);
+                cameraX = newCameraX;
+
+                foreach (var particle in particles)
+                {
+                    particle.Size = (int)(widthRatio * particle.Size);
+                    particle.SpeedX = widthRatio * particle.SpeedX;
+                    particle.SpeedY = widthRatio * particle.SpeedX;
+                }
+
+                if (!gameStarted)
+                {
+                    float newLogoX = LogoPicture.Location.X * widthRatio;
+                    float newLogoY = LogoPicture.Location.Y * heightRatio;
+
+                    float newLogoWidth = LogoPicture.Width * widthRatio;
+                    float newLogoHeight = LogoPicture.Height * heightRatio;
+
+                    LogoPicture.Location = new Point((int)Math.Round(newLogoX), (int)Math.Round(newLogoY));
+                    LogoPicture.Size = new Size((int)Math.Round(newLogoWidth), (int)Math.Round(newLogoHeight));
+
+                    float newButtonX = StartGameBTN.Location.X * widthRatio;
+                    float newButtonY = StartGameBTN.Location.Y * heightRatio;
+
+                    StartGameBTN.Location = new Point((int)Math.Round(newButtonX), (int)Math.Round(newButtonY));
+
+                    float newButtonWidth = StartGameBTN.Width * widthRatio;
+                    float newButtonHeight = StartGameBTN.Height * heightRatio;
+
+                    StartGameBTN.Size = new Size((int)Math.Round(newButtonWidth), (int)Math.Round(newButtonHeight));
+
+                    int newButtonX2 = (int)Math.Round(LeaveGameBTN.Location.X * widthRatio);
+                    int newButtonY2 = (int)Math.Round(LeaveGameBTN.Location.Y * heightRatio);
+
+                    LeaveGameBTN.Location = new Point(newButtonX2, newButtonY2);
+
+                    float newButtonWidth2 = LeaveGameBTN.Width * widthRatio;
+                    float newButtonHeight2 = LeaveGameBTN.Height * heightRatio;
+
+                    LeaveGameBTN.Size = new Size((int)Math.Round(newButtonWidth2), (int)Math.Round(newButtonHeight2));
+
+                    ResizeAdaptatinon.AdaptFontSize(StartGameBTN, widthRatio);
+                    ResizeAdaptatinon.AdaptFontSize(LeaveGameBTN, widthRatio);
+                }
+                isBackgroundInvalidated = true;
+                backgroundBuffer = new Bitmap(LevelLength, this.ClientSize.Height * 2);
+            }
+            gamePaused = WindowState == FormWindowState.Minimized ? true : false;
+
+            originalResolution = this.ClientSize;
+        }
         private void ToggleFullScreen()
         {
             if (this.FormBorderStyle == FormBorderStyle.None)
@@ -758,7 +760,7 @@ namespace SoloLeveling
             }
         }
         
-        // Нажатие конпокой мыши
+        // Нажатие конпок мыши
         private void MainForm_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && player.IsOnGround && !player.IsChargingAttack)
@@ -773,7 +775,7 @@ namespace SoloLeveling
             }
         }
         
-        // Нажатие кнопки на клавиатуре
+        // Нажатие кнопк на клавиатуре
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F11)
@@ -801,6 +803,18 @@ namespace SoloLeveling
         private void LeaveGameBTN_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        // Кнопка "Настройки"
+        private void SettingsBTN_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // Кнопка "Об игре"
+        private void AboutGameBTN_Click(object sender, EventArgs e)
+        {
+
         }
     }
     public static class Keyboard

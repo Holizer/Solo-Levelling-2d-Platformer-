@@ -154,7 +154,7 @@ namespace SoloLeveling
 
                     if (player.currentSpriteIndex == 2)
                     {
-                        TryMovePlayer((int)(clientWidth * 0.0025) * moveDirection);
+                        TryMovePlayer((int)(clientSize.Width * 0.0025) * moveDirection);
                     }
                     if (player.currentSpriteIndex == 12)
                     {
@@ -162,7 +162,7 @@ namespace SoloLeveling
                     }
                     if (player.currentSpriteIndex == 9)
                     {
-                        TryMovePlayer((int)(clientWidth * 0.017) * moveDirection);
+                        TryMovePlayer((int)(clientSize.Width * 0.017) * moveDirection);
                     }
                 }
                 else
@@ -192,7 +192,7 @@ namespace SoloLeveling
                     player.currentSpriteIndex = (int)(framesCount * elapsed.TotalMilliseconds / currentAnimation.TotalDuration.TotalMilliseconds) % framesCount;
                     if (player.currentSpriteIndex == 1)
                     {
-                        TryMovePlayer((int)(clientWidth * 0.005) * directionX);
+                        TryMovePlayer((int)(clientSize.Width * 0.005) * directionX);
                         sword.X = directionX < 0 ? player.X - player.Width : player.X + player.Width / 4;
                     }
                 }
@@ -277,16 +277,16 @@ namespace SoloLeveling
             string levelText = $"Level: {player.Level}";
             string experienceText = $"Experience: {player.Experience}/{player.ExperienceToNextLevel}";
 
-            levelFont = new Font(privateFontCollection.Families.First(f => f.Name == "Planes_ValMore"), (int)(clientWidth * 0.018), FontStyle.Bold);
+            levelFont = new Font(privateFontCollection.Families.First(f => f.Name == "Planes_ValMore"), (int)(clientSize.Width * 0.018), FontStyle.Bold);
 
             SizeF levelTextSize = g.MeasureString(levelText, levelFont);
             SizeF experienceTextSize = g.MeasureString(experienceText, levelFont);
 
-            float levelTextX = cameraX + clientWidth / 2 - levelTextSize.Width / 2;
-            float levelTextY = clientWidth * 0.012f;
+            float levelTextX = cameraX + clientSize.Width / 2 - levelTextSize.Width / 2;
+            float levelTextY = clientSize.Width * 0.012f;
             PointF levelTextLocation = new PointF(levelTextX, levelTextY);
 
-            float experienceTextX = cameraX + clientWidth / 2 - experienceTextSize.Width / 2;
+            float experienceTextX = cameraX + clientSize.Width / 2 - experienceTextSize.Width / 2;
             float experienceTextY = levelTextY + levelTextSize.Height;
             PointF experienceTextLocation = new PointF(experienceTextX, experienceTextY);
 
@@ -319,19 +319,19 @@ namespace SoloLeveling
         private static void DrawPlayerDeath(Graphics g)
         {
             string deathText = "ВЫ ПОГИБЛИ";
-            DeathFont = new Font(privateFontCollection.Families.First(f => f.Name == "Planes_ValMore"), (int)(clientWidth * 0.05), FontStyle.Bold);
+            DeathFont = new Font(privateFontCollection.Families.First(f => f.Name == "Planes_ValMore"), (int)(clientSize.Width * 0.05), FontStyle.Bold);
 
             SizeF TextSize = g.MeasureString(deathText, DeathFont);
 
-            float TextX = cameraX + clientWidth / 2 - TextSize.Width / 2;
-            float TextY = clientHeight * 0.35f;
+            float TextX = cameraX + clientSize.Width / 2 - TextSize.Width / 2;
+            float TextY = clientSize.Height * 0.35f;
 
             PointF DeathTextLocation = new PointF(TextX, TextY);
 
             Color overlayColor = Color.FromArgb(overlayAlpha, 0, 0, 0);
             Brush overlayBrush = new SolidBrush(overlayColor);
 
-            g.FillRectangle(overlayBrush, cameraX, 0, clientWidth, clientHeight);
+            g.FillRectangle(overlayBrush, cameraX, 0, clientSize.Width, clientSize.Height);
 
             g.DrawString(deathText, DeathFont, Brushes.Red, DeathTextLocation);
         }
@@ -341,7 +341,7 @@ namespace SoloLeveling
         {
             Color overlayColor = Color.FromArgb(160, 0, 0, 0);
             Brush overlayBrush = new SolidBrush(overlayColor);
-            g.FillRectangle(overlayBrush, cameraX, 0, clientWidth, clientHeight);
+            g.FillRectangle(overlayBrush, cameraX, 0, clientSize.Width, clientSize.Height);
         }
     }
 }

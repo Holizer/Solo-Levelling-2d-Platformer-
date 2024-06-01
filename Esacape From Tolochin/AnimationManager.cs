@@ -63,7 +63,7 @@ namespace SoloLeveling
                 invertedBitmap.RotateFlip(RotateFlipType.RotateNoneFlipX);
 
                 // Инвертируем координаты X правильно для отраженного изображения
-                float invertedX = clientWidth - frame.DisplayRectangle.Right - frame.DisplayRectangle.Width;
+                float invertedX = clientSize.Width - frame.DisplayRectangle.Right - frame.DisplayRectangle.Width;
 
                 // Создаем новый прямоугольник с инвертированными координатами X
                 RectangleF invertedRect = new RectangleF(

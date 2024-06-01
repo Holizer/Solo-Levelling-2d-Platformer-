@@ -6,8 +6,8 @@ namespace SoloLeveling
 {
     public class Sword
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public float PrecentWidth { get; set; }
@@ -59,7 +59,7 @@ namespace SoloLeveling
         }
         public static void Attack()
         {
-            int knockbackDistance = (int)(clientWidth * 0.1);
+            int knockbackDistance = (int)(clientSize.Width * 0.1);
             int knockbackCooldown = 10;
 
             Rectangle swordRect = new Rectangle(sword.X, sword.Y, sword.Width, sword.Height);
@@ -147,7 +147,7 @@ namespace SoloLeveling
                         enemy.KnockbackTimer.Start();
                     }
 
-                    int knockbackDistance = (int)(clientWidth * 0.03);
+                    int knockbackDistance = (int)(clientSize.Width * 0.03);
                     int knockbackDirection = player.X < enemy.X ? 1 : -1;
                     int proposedX = enemy.X + knockbackDistance * knockbackDirection;
 
