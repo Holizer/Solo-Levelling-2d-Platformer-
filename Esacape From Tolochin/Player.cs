@@ -69,6 +69,7 @@ namespace SoloLeveling
         {
             return JumpForcePercent * clientSize.Height;
         }
+        //
         public float Speed(Size clientSize)
         {
             return SpeedPrecent * clientSize.Height;
