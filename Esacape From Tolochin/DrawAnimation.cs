@@ -7,6 +7,7 @@ using static SoloLeveling.Player;
 using static SoloLeveling.MainForm;
 using static SoloLeveling.AnimationManagaer;
 using System.Windows.Forms;
+using SoloLeveling;
 
 namespace SoloLeveling
 {
@@ -14,120 +15,66 @@ namespace SoloLeveling
     {
         public static void SetupInGameAnimation()
         {
-            playerAFKAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle1.png")), new RectangleF(8, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle2.png")), new RectangleF(8, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle3.png")), new RectangleF(8, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle4.png")), new RectangleF(8, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Idle5.png")), new RectangleF(8, 2, 60, 80)),
-            }, 200);
-            playerMovingRightAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame1.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame2.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame3.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame4.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame5.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame6.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame7.png")), new RectangleF(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-rigth_frames\\frame8.png")), new RectangleF(0, 2, 65, 80)),
-            }, 90);
-            playerMovingLeftAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame1.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame2.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame3.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame4.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame5.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame6.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame7.png")), new Rectangle(0, 2, 65, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "moving-left_frames\\frame8.png")), new Rectangle(0, 2, 65, 80)),
-            }, 90);
-            playerDeathAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame1.png")), new RectangleF(0, 2, 60, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame2.png")), new RectangleF(0, 2, 60, 85)),
-                //new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame3.png")), new Rectangle(0, -4, 70, 85)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame4.png")), new RectangleF(0, 20, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame5.png")), new RectangleF(0, 20, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame6.png")), new RectangleF(0, 21, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame7.png")), new RectangleF(0, 22, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame8.png")), new RectangleF(0, 22, 60, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame9.png")), new RectangleF(0, 23, 70, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame10.png")), new RectangleF(0, 24, 75, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame11.png")), new RectangleF(0, 24, 75, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame12.png")), new RectangleF(0, 24, 75, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame13.png")), new RectangleF(0, 24, 90, 60)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Death_Anim\\frame14.png")), new RectangleF(0, 24, 90, 60)),
-            }, 275);
-            playerChargedLeftAttackAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame1.png")), new RectangleF(-40, 2, 100, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame2.png")), new RectangleF(0, -8, 80, 90)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame3.png")), new RectangleF(-20, -11, 100, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame4.png")), new RectangleF(-20, -13, 100, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame5.png")), new RectangleF(-15, -48, 100, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame6.png")), new RectangleF(-15, -53, 100, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame7.png")), new RectangleF(-15, -60, 100, 155)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame8.png")), new RectangleF(-15, -64, 100, 155)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame9.png")), new RectangleF(-15, -99, 110, 183)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame10.png")), new RectangleF(-35, -78, 95, 160)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame11.png")), new RectangleF(-10, -60, 200, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame12.png")), new RectangleF(-10, -52, 200, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame13.png")), new RectangleF(-10, 3, 200, 87)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame14.png")), new RectangleF(-215, -7, 450, 90)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame15.png")), new RectangleF(-160, -128, 300, 210)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame16.png")), new RectangleF(-160, -138, 330, 220)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame17.png")), new RectangleF(-175, -118, 370, 200)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame18.png")), new RectangleF(-120, -98, 310, 180)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame19.png")), new RectangleF(-2, -98, 210, 180)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame20.png")), new RectangleF(0, -53, 170, 135)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame21.png")), new RectangleF(0, -43, 145, 125)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "ChargedAttak_Left\\Frame22.png")), new RectangleF(0, -3, 100, 85)),
-            }, 120);
-            playerChargedAttackAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame1.png")), new RectangleF(0, 2, 100, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame2.png")), new RectangleF(0, -8, 80, 90)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame3.png")), new RectangleF(0, -11, 100, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame4.png")), new RectangleF(-5, -13, 100, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame5.png")), new RectangleF(-5, -48, 100, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame6.png")), new RectangleF(-5, -53, 100, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame7.png")), new RectangleF(-5, -60, 100, 155)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame8.png")), new RectangleF(-5, -64, 100, 155)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame9.png")), new RectangleF(-5, -99, 110, 183)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame10.png")), new RectangleF(-35, -78, 95, 160)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame11.png")), new RectangleF(-135, -60, 200, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame12.png")), new RectangleF(-135, -52, 200, 145)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame13.png")), new RectangleF(-135, 3, 200, 87)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame14.png")), new RectangleF(-155, -7, 450, 90)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame15.png")), new RectangleF(-70, -128, 300, 210)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame16.png")), new RectangleF(-100, -138, 330, 220)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame17.png")), new RectangleF(-115, -118, 370, 200)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame18.png")), new RectangleF(-110, -98, 310, 180)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame19.png")), new RectangleF(-135, -98, 210, 180)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame20.png")), new RectangleF(-98, -53, 170, 135)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame21.png")), new RectangleF(-75, -33, 145, 115)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "Charged_AttackAnimation\\Frame22.png")), new RectangleF(-30, -3, 100, 85)),
-            }, 120);
-            playerAttackAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "AttackAnimLeft\\frame1.png")), new RectangleF(0, 2, 95, 80)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "AttackAnimLeft\\frame3.png")), new RectangleF(-30, 2, 95, 80))
-            }, 100);
-            enemyMovingAnimation = new Animation(new List<AnimationFrame>
-            {
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame1.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame2.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame3.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame4.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame5.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame6.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame7.png")), new RectangleF(0, 2, 35, 40)),
-                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame8.png")), new RectangleF(0, 2, 35, 40)),
-            }, 275);
+            string afkAnimFolderPath = Path.Combine(resourcesPath, "AFKAnim");
+            string[] afkFrames = { "Frame1.png", "Frame2.png", "Frame3.png", "Frame4.png", "Frame5.png" };
+            playerAFKAnimation = LoadAnimation(afkAnimFolderPath, afkFrames, new RectangleF(0, 60, 90, 110), new PointF(0.5f, 0.5f), 200);
+
+            string movingRightAinmFolderPath = Path.Combine(resourcesPath, "MovingRigthAnim");
+            string[] movingRightFrames = { "frame1.png", "frame2.png", "frame3.png", "frame4.png", "frame5.png", "frame6.png", "frame7.png", "frame8.png" };
+            playerMovingRightAnimation = LoadAnimation(movingRightAinmFolderPath, movingRightFrames, new RectangleF(0, 60, 95, 110), new PointF(0.5f, 0.5f), 90);
+
+            string movingLeftAnimFolderPath = Path.Combine(resourcesPath, "MovingLeftAnim");
+            string[] movingLeftFrames = { "frame1.png", "frame2.png", "frame3.png", "frame4.png", "frame5.png", "frame6.png", "frame7.png", "frame8.png" };
+            playerMovingLeftAnimation = LoadAnimation(movingLeftAnimFolderPath, movingLeftFrames, new RectangleF(0, 60, 85, 110), new PointF(0.5f, 0.5f), 90);
+
+            string attackAnimFolderPath = Path.Combine(resourcesPath, "AttackAnim");
+            string[] attackAnimFrames = { "frame1.png", "frame2.png" };
+            playerAttackAnimation = LoadAnimation(attackAnimFolderPath, attackAnimFrames, new RectangleF(0, 4, 125, 110), new PointF(0.5f, 0.5f), 120);
+
+            string chargedRightAttackAnimFolderPath = Path.Combine(resourcesPath, "ChargedAttackAnim");
+            string[] chargedRightAttackAnimFrames = {
+                "Frame1.png", "Frame2.png", "Frame3.png", "Frame4.png",
+                "Frame5.png", "Frame6.png", "Frame7.png", "Frame8.png", "Frame9.png",
+                "Frame10.png", "Frame11.png", "Frame12.png", "Frame13.png", "Frame14.png",
+                "Frame15.png", "Frame16.png", "Frame17.png", "Frame18.png", "Frame19.png",
+                "Frame20.png", "Frame21.png", "Frame22.png"
+            };
+            playerChargedAttackAnimation = LoadAnimation(
+                chargedRightAttackAnimFolderPath,
+                chargedRightAttackAnimFrames,
+                new RectangleF(30, -49, 652, 390),
+                new PointF(0.5f, 0.5f),
+                100
+            );
+
+            string deathAnimFolderPath = Path.Combine(resourcesPath, "DeathAnim");
+            string[] deathAnimFrames = {
+                "Frame1.png", "Frame2.png", "Frame3.png", "Frame4.png",
+                "Frame5.png", "Frame6.png", "Frame7.png", "Frame8.png", "Frame9.png",
+                "Frame10.png", "Frame11.png", "Frame12.png", "Frame13.png"
+            };
+            playerDeathAnimation = LoadAnimation(
+                deathAnimFolderPath,
+                deathAnimFrames,
+                new RectangleF(30, -49, 234, 260),
+                new PointF(0.5f, 0.5f),
+                150
+            );
+
         }
+       
+//enemyMovingAnimation = new Animation(new List<AnimationFrame>
+//            {
+//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame1.png")), new RectangleF(0, 2, 35, 40)),
+//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame2.png")), new RectangleF(0, 2, 35, 40)),
+//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame3.png")), new RectangleF(0, 2, 35, 40)),
+//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame4.png")), new RectangleF(0, 2, 35, 40)),
+//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame5.png")), new RectangleF(0, 2, 35, 40)),
+//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame6.png")), new RectangleF(0, 2, 35, 40)),
+//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame7.png")), new RectangleF(0, 2, 35, 40)),
+//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame8.png")), new RectangleF(0, 2, 35, 40)),
+//            }, 275);
+//        }
         public static void DrawPlayerAnimation(Graphics g)
         {
             Animation currentAnimation;
@@ -141,7 +88,7 @@ namespace SoloLeveling
             else if (player.IsChargingAttack && !player.IsDead())
             {
                 int moveDirection = player.CurrentDirection == Direction.Right ? 1 : -1;
-                currentAnimation = player.CurrentDirection == Direction.Right ? playerChargedAttackAnimation : playerChargedLeftAttackAnimation;
+                currentAnimation = player.CurrentDirection == Direction.Right ? playerChargedAttackAnimation : AnimationManagaer.CreateInvertedAnimation(playerChargedAttackAnimation);
                 TimeSpan elapsed = DateTime.Now - SwordAttack.chargedAttackStartTime;
 
                 if (elapsed <= playerChargedAttackAnimation.TotalDuration)
@@ -179,7 +126,7 @@ namespace SoloLeveling
             }
             else if (!player.IsChargingAttack && player.IsAttack && !player.IsDead())
             {
-                currentAnimation = player.CurrentDirection == Player.Direction.Right ? AnimationManagaer.CreateInvertedAnimation(playerAttackAnimation) : playerAttackAnimation;
+                currentAnimation = player.CurrentDirection == Player.Direction.Right ? playerAttackAnimation : AnimationManagaer.CreateInvertedAnimation(playerAttackAnimation);
                 TimeSpan elapsed = DateTime.Now - SwordAttack.AttackStartTime;
                 int directionX = player.CurrentDirection == Player.Direction.Right ? 1 : -1;
 
@@ -236,12 +183,18 @@ namespace SoloLeveling
                 player.currentSpriteIndex = 0;
             }
 
+            var frame = currentAnimation.Frames[player.currentSpriteIndex];
+
+            // Применение якоря для позиционирования изображения
+            float drawX = player.X + frame.DisplayRectangle.X - frame.DisplayRectangle.Width * frame.Anchor.X;
+            float drawY = player.Y + frame.DisplayRectangle.Y - frame.DisplayRectangle.Height * frame.Anchor.Y;
+
             g.DrawImage(
-                currentAnimation.Frames[player.currentSpriteIndex].Frame,
-                player.X + currentAnimation.Frames[player.currentSpriteIndex].DisplayRectangle.X,
-                player.Y + currentAnimation.Frames[player.currentSpriteIndex].DisplayRectangle.Y,
-                currentAnimation.Frames[player.currentSpriteIndex].DisplayRectangle.Width,
-                currentAnimation.Frames[player.currentSpriteIndex].DisplayRectangle.Height
+                frame.Frame,
+                drawX,
+                drawY,
+                frame.DisplayRectangle.Width,
+                frame.DisplayRectangle.Height
             );
         }
         public static void DrawEnemyAnimation(Graphics g)

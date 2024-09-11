@@ -42,29 +42,6 @@ namespace SoloLeveling
 
         public static PrivateFontCollection privateFontCollection = new PrivateFontCollection();
 
-        public class ScreenResolution
-        {
-            public string Name { get; set; }
-            public int Width { get; set; }
-            public int Height { get; set; }
-            public int RefreshRate { get; set; }
-            public string AspectRatio { get; set; }
-
-            public ScreenResolution(string name, int width, int height, int refreshRate, string aspectRatio)
-            {
-                Name = name;
-                Width = width;
-                Height = height;
-                RefreshRate = refreshRate;
-                AspectRatio = aspectRatio;
-            }
-
-            public override string ToString()
-            {
-                return $"{Name}: {Width}x{Height}, {RefreshRate} Hz, {AspectRatio}";
-            }
-        }
-
         public MainForm()
         {
             InitializeComponent();
@@ -101,11 +78,12 @@ namespace SoloLeveling
 
         public static PauseMenu PauseMenu = new PauseMenu();
         public Panel PauseMenuPanel = PauseMenu.GetPanel();
+     
         // Кнопка "START"
         private void StartGameBTN_Click(object sender, EventArgs e)
         {
             loadingTimer = new Timer();
-            loadingTimer.Interval = 2500;
+            loadingTimer.Interval = 10;
             loadingTimer.Tick += LoadingTimer_Tick;
 
             this.Controls.Clear();
@@ -175,6 +153,8 @@ namespace SoloLeveling
                 control.Font = customFont;
             }
         }
+        
+        
         private void UpdatePlayerAnimation(object sender, EventArgs e)
         {
             /*
@@ -222,6 +202,7 @@ namespace SoloLeveling
                 }
             //}
         }
+       
         public static bool WillCollideWithObstacles(int x, int y, int width, int height)
         {
             if (x < 0 || x + width > LevelLength)
@@ -271,14 +252,6 @@ namespace SoloLeveling
                 return new RectangleF(X, Y, Width, Height);
             }
         }
-        public class Ground : DynamicRectangle
-        {
-            public Ground(float x, float y, float width, float height, Bitmap texture)
-                : base(x, y, width, height, texture)
-            {
-                // Дополнительные параметры, специфичные для земли, могут быть добавлены здесь
-            }
-        }
 
         public static int LevelLength;
         public static Player player;
@@ -313,10 +286,11 @@ namespace SoloLeveling
             LevelLength = 3000;
             Gravity = 3;
             backgroundBuffer = new Bitmap(LevelLength, 720);
-            traderZone = new TraderZone((int)(LevelLength * 0.825), 100, 450, 350);
+            traderZone = new TraderZone((int)(LevelLength * 0.2), 100, 450, 350);
             ground = new List<DynamicRectangle>
             {
-                new Ground(0, 720 - 50, LevelLength, 50, GroundTexture)
+                new DynamicRectangle(0, this.ClientSize.Height - 80, LevelLength/2, 80, GroundTexture),
+                new DynamicRectangle(LevelLength/2, this.ClientSize.Height - 80, LevelLength/2, 80, GroundTexture)
             };
             platforms = new List<DynamicRectangle>
             {
@@ -330,11 +304,12 @@ namespace SoloLeveling
             };
             TolochinApple = new List<FallingPickup>
             {
+                new FallingPickup(300, 100, 150, 150, 10, sacredApple)
             };
             player = new Player(
                         100, 310, // => x, y
                         0.02f, 100,  // => spead, hp
-                        0.18f, 0.07f, // prec heigth and width
+                        0.17f, 0.06f, // prec heigth and width
                         0.1f, 0.1f, // prec x and y
                         0.2f, playerTexture); // JumpForce prec and start texture
             //public Sword(int x, int y, float width, float height, int damage)
@@ -581,14 +556,14 @@ namespace SoloLeveling
                 sword.X = (int)Math.Round(sword.X * widthRatio);
                 sword.Y = (int)Math.Round(sword.Y * widthRatio);
 
-                ResizeAdaptatinon.AdaptAnimationFrames(playerAFKAnimation.Frames, widthRatio, heightRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerChargedAttackAnimation.Frames, widthRatio, heightRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerMovingLeftAnimation.Frames, widthRatio, heightRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerMovingRightAnimation.Frames, widthRatio, heightRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerDeathAnimation.Frames, widthRatio, heightRatio);
-                ResizeAdaptatinon.AdaptAnimationFrames(playerAttackAnimation.Frames, widthRatio, heightRatio);
+                //ResizeAdaptatinon.AdaptAnimationFrames(playerAFKAnimation.Frames, widthRatio, heightRatio);
+                //ResizeAdaptatinon.AdaptAnimationFrames(playerChargedAttackAnimation.Frames, widthRatio, heightRatio);
+                //ResizeAdaptatinon.AdaptAnimationFrames(playerMovingLeftAnimation.Frames, widthRatio, heightRatio);
+                //ResizeAdaptatinon.AdaptAnimationFrames(playerMovingRightAnimation.Frames, widthRatio, heightRatio);
+                //ResizeAdaptatinon.AdaptAnimationFrames(playerDeathAnimation.Frames, widthRatio, heightRatio);
+                //ResizeAdaptatinon.AdaptAnimationFrames(playerAttackAnimation.Frames, widthRatio, heightRatio);
 
-                ResizeAdaptatinon.AdaptAnimationFrames(enemyMovingAnimation.Frames, widthRatio, heightRatio);
+                //ResizeAdaptatinon.AdaptAnimationFrames(enemyMovingAnimation.Frames, widthRatio, heightRatio);
                 foreach (var enemy in enemies.ToList())
                 {
                     int newEnemyX = (int)(enemy.X * widthRatio);
@@ -765,7 +740,7 @@ namespace SoloLeveling
         {
             if (e.Button == MouseButtons.Left && player.IsOnGround && !player.IsChargingAttack)
             {
-                SoundManager.PlayDefaultAttackSound();
+                //SoundManager.PlayDefaultAttackSound();
                 SwordAttack.AttackWithSword();
             }
             if (e.Button == MouseButtons.Right && player.IsOnGround)

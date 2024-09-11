@@ -8,21 +8,21 @@ namespace SoloLeveling
 {
     public class ResizeAdaptatinon
     {
-        public static void AdaptAnimationFrames(List<AnimationFrame> frames, float xRatio, float yRatio)
-        {
-            for (int i = 0; i < frames.Count; i++)
-            {
-                var frame = frames[i];
-                var displayRect = frame.DisplayRectangle;
+        //public static void AdaptAnimationFrames(List<AnimationFrame> frames, float xRatio, float yRatio)
+        //{
+        //    for (int i = 0; i < frames.Count; i++)
+        //    {
+        //        var frame = frames[i];
+        //        var displayRect = frame.DisplayRectangle;
 
-                float adaptedX = displayRect.X * xRatio;
-                float adaptedY = displayRect.Y * yRatio;
-                float adaptedWidth = displayRect.Width * xRatio;
-                float adaptedHeight = displayRect.Height * yRatio;
+        //        float adaptedX = displayRect.X * xRatio;
+        //        float adaptedY = displayRect.Y * yRatio;
+        //        float adaptedWidth = displayRect.Width * xRatio;
+        //        float adaptedHeight = displayRect.Height * yRatio;
 
-                frames[i] = new AnimationFrame(frame.Frame, new RectangleF(adaptedX, adaptedY, adaptedWidth, adaptedHeight));
-            }
-        }
+        //        frames[i] = new AnimationFrame(frame.Frame, new RectangleF(adaptedX, adaptedY, adaptedWidth, adaptedHeight));
+        //    }
+        //}
         public static void AdaptDynamicRectangles(List<DynamicRectangle> rectangles, float xRatio, float yRatio)
         {
             foreach (var rect in rectangles)

@@ -179,11 +179,10 @@ namespace SoloLeveling
                 }
             }
 
-            player.IsOnGround = false;
-
             player.IsOnGround = ground.Any(rect => CheckCollision(player.X, player.Y + 1, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height))
                              || platforms.Any(rect => CheckCollision(player.X, player.Y + 1, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height));
-
+            
+    
             foreach (var platformRect in platforms)
             {
                 var rect = platformRect.ToRectangle(clientSize);
