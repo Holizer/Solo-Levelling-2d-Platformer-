@@ -283,7 +283,7 @@ namespace SoloLeveling
             LevelLength = 3000;
             Gravity = 3;
             backgroundBuffer = new Bitmap(LevelLength, 720);
-            traderZone = new TraderZone((int)(LevelLength * 0.8), 200, 450, 350);
+            traderZone = new TraderZone((int)(LevelLength * 0.8), 200, 450, 400);
             ground = new List<DynamicRectangle>
             {
                 new DynamicRectangle(0, this.ClientSize.Height - 80, LevelLength / 2, 80, GroundTexture),
@@ -553,7 +553,7 @@ namespace SoloLeveling
                 //Отрисовка анимации, меча и прочих элементов поверх фона
                 g.DrawImageUnscaled(backgroundBuffer, 0, 0, LevelLength, ClientSize.Height);
 
-                using (Pen pen = new Pen(Color.Red, 2))
+                using (Pen pen = new Pen(Color.Transparent, 2))
                 {
                     g.DrawRectangle(pen, traderZone.Bounds.X, traderZone.Bounds.Y, traderZone.Bounds.Width, traderZone.Bounds.Height);
                 }
