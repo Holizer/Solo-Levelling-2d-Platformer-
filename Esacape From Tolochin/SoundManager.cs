@@ -12,6 +12,9 @@ namespace SoloLeveling
         private static WaveOutEvent WaveOutEvent => lazyWaveOutEvent.Value;
 
         private static float volume = 1.0f;
+
+        private static AudioFileReader currentReader;
+
         private static AudioFileReader LoadAudioFile(string fileName)
         {
             return new AudioFileReader(Path.Combine(ResourcesPath, fileName));
@@ -19,18 +22,32 @@ namespace SoloLeveling
 
         private static void InitAndPlay(AudioFileReader reader)
         {
-            reader.Volume = volume;
-            WaveOutEvent.Init(reader);
+            if (currentReader != null)
+            {
+                WaveOutEvent.Stop();
+                currentReader.Dispose();
+            }
+
+            currentReader = reader;
+            currentReader.Volume = volume;
+
+            WaveOutEvent.Init(currentReader);
             WaveOutEvent.Play();
         }
 
         public static void SetVolume(float newVolume)
         {
             volume = newVolume < 0.0f ? 0.0f : (newVolume > 1.0f ? 1.0f : newVolume);
+
+            if (currentReader != null)
+            {
+                currentReader.Volume = volume;
+            }
         }
 
         public static void PlaySound(string fileName, float customVolume = 1.0f)
         {
+            SetVolume(customVolume);
             var reader = LoadAudioFile(fileName);
             InitAndPlay(reader);
         }

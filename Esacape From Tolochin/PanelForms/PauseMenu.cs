@@ -26,10 +26,6 @@ namespace SoloLeveling
             ApplyCustomFont(LeaveToMainMenuBTN, "Planes_ValMore", 13);
         }
 
-        private void ContinueGameBTN_Click(object sender, System.EventArgs e)
-        {
-            SoundManager.PlayClickSound();
-        }
         public Panel GetPanel()
         {
             return ButtonsPauseMenuPanel;
@@ -38,17 +34,18 @@ namespace SoloLeveling
 
         private void SettingsBTN_Click(object sender, System.EventArgs e)
         {
-
+            SoundManager.PlayClickSound();
         }
 
-        private void LeaveToMainMenuBTN_Click(object sender, System.EventArgs e)
+        private void ContinueGameBTN_Click_1(object sender, System.EventArgs e)
         {
-
+            Active = false;
+            SoundManager.PlayClickSound();
         }
 
-        private void TablePauseMenuPanel_Paint(object sender, PaintEventArgs e)
+        private void LeaveToMainMenuBTN_Click_1(object sender, System.EventArgs e)
         {
-
+            Application.Exit();
         }
     }
 }

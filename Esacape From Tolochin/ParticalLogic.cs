@@ -76,7 +76,7 @@ namespace SoloLeveling
 
             Rectangle particleRectangle = new Rectangle(particle.X, particle.Y, particle.Size, particle.Size);
 
-            if (particleRectangle.IntersectsWith(player.GetRectangle(clientSize)))
+            if (particleRectangle.IntersectsWith(player.GetRectangle()))
             {
                 particles.Remove(particle);
                 player.GainExperience(20);

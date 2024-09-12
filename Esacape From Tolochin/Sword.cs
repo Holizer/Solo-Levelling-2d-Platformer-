@@ -10,26 +10,21 @@ namespace SoloLeveling
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public float PrecentWidth { get; set; }
-        public float PrecentHeight { get; set; }
         public int Damage { get; set; }
 
         public bool IsAttacking;
         public Bitmap Texture { get; set; }
-        public Sword(int x, int y, float precentWidth, float precentHeigth, int damage)
+        public Sword(int x, int y, int width, int height, int damage)
         {
             X = x;
             Y = y;
-            PrecentWidth = precentWidth;
-            PrecentHeight = precentHeigth;
+            Width = width;
+            Height = height;
             Damage = damage;
         }
-        public Rectangle GetRectangle(Size clientSize)
+        public Rectangle GetRectangle()
         {
-            Height = (int)(PrecentHeight * clientSize.Height);
-            Width = (int)(PrecentWidth * clientSize.Width);
-
-            return new Rectangle((int)X, (int)Y, Width, Height);
+            return new Rectangle(X,Y, Width, Height);
         }
     }
     public class SwordAttack
@@ -38,6 +33,14 @@ namespace SoloLeveling
 
         public static DateTime AttackStartTime;
 
+        public static float savedJumpForce;
+
+        public static float savedSpeed;
+
+        public const int knockbackDistance = 20;
+
+        public const int knockbackCooldown = 2;
+
         public static void AttackWithSword()
         {
             if (player.IsAttack)
@@ -45,11 +48,8 @@ namespace SoloLeveling
                 return;
             }
 
-            if (!player.IsAttack)
-            {
-                prevJumpForcePercent = player.JumpForcePercent;
-                prevSpeedPrecent = player.SpeedPrecent;
-            }
+            savedJumpForce = player.JumpForce; 
+            savedSpeed = player.Speed;
 
             AttackStartTime = DateTime.Now;
 
@@ -59,14 +59,11 @@ namespace SoloLeveling
         }
         public static void Attack()
         {
-            int knockbackDistance = (int)(clientSize.Width * 0.1);
-            int knockbackCooldown = 10;
-
             Rectangle swordRect = new Rectangle(sword.X, sword.Y, sword.Width, sword.Height);
 
             foreach (var enemy in enemies)
             {
-                Rectangle enemyRect = enemy.GetRectangle(clientSize);
+                Rectangle enemyRect = enemy.GetRectangle();
 
                 if (swordRect.IntersectsWith(enemyRect))
                 {
@@ -98,7 +95,7 @@ namespace SoloLeveling
                                 enemy.Y = proposedY;
                             }
 
-                            enemy.VerticalSpeed = -enemy.JumpForce(clientSize) / 4;
+                            enemy.VerticalSpeed = 20;
                             enemy.IsOnGround = false;
                             enemy.IsJumping = true;
                         }
@@ -113,11 +110,8 @@ namespace SoloLeveling
                 return;
             }
 
-            if (!player.IsChargingAttack)
-            {
-                prevJumpForcePercent = player.JumpForcePercent;
-                prevSpeedPrecent = player.SpeedPrecent;
-            }
+            savedJumpForce = player.JumpForce;
+            savedSpeed = player.Speed;
 
             chargedAttackStartTime = DateTime.Now;
 
@@ -130,7 +124,7 @@ namespace SoloLeveling
             RectangleF swordRect = new RectangleF(sword.X - sword.Width / 3, sword.Y - sword.Height / 2, sword.Width * 3f, sword.Height * 2);
             foreach (var enemy in enemies)
             {
-                Rectangle enemyRect = enemy.GetRectangle(clientSize);
+                Rectangle enemyRect = enemy.GetRectangle();
 
                 if (swordRect.IntersectsWith(enemyRect))
                 {
@@ -147,7 +141,6 @@ namespace SoloLeveling
                         enemy.KnockbackTimer.Start();
                     }
 
-                    int knockbackDistance = (int)(clientSize.Width * 0.03);
                     int knockbackDirection = player.X < enemy.X ? 1 : -1;
                     int proposedX = enemy.X + knockbackDistance * knockbackDirection;
 
@@ -168,7 +161,7 @@ namespace SoloLeveling
                         enemy.X = proposedX;
                     }
 
-                    enemy.VerticalSpeed = -enemy.JumpForce(clientSize) / 8;
+                    enemy.VerticalSpeed = 20;
                     enemy.IsOnGround = false;
                     enemy.IsJumping = true;
                 }

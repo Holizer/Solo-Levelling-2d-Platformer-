@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Drawing.Text;
-using System.Media;
 using Button = System.Windows.Forms.Button;
 using static SoloLeveling.AnimationManagaer;
 using static SoloLeveling.ParticalMovement;
@@ -21,10 +20,6 @@ namespace SoloLeveling
         public static readonly string resourcesPath = Path.Combine(Application.StartupPath, @"..\..\Resources");
         public static Size clientSize;
         public static FormWindowState windowState;
-
-        public static bool isGameOver = false;
-
-        private Bitmap backgroundBuffer;
 
         public static int overlayAlpha = 0;
         public static int maxOverlayAlpha = 180;
@@ -39,6 +34,9 @@ namespace SoloLeveling
 
         public static bool gamePaused = false;
         public static bool gameStarted = false;
+        public static bool isGameOver = false;
+
+        private Bitmap backgroundBuffer;
 
         public static PrivateFontCollection privateFontCollection = new PrivateFontCollection();
 
@@ -279,40 +277,43 @@ namespace SoloLeveling
         Bitmap sacredApple = new Bitmap(Path.Combine(resourcesPath, "blessing_apple.png"));
         Bitmap pickupTexture = new Bitmap(Path.Combine(resourcesPath, "golden-apple-minecraft.gif"));
         Bitmap playerTexture = new Bitmap(Path.Combine(resourcesPath, "Idle1.png"));
-        Bitmap boxTexture = new Bitmap(Path.Combine(resourcesPath, "box.jpg"));
+        Bitmap boxTexture = new Bitmap(Path.Combine(resourcesPath, "box.png"));
         private void SetupGameField()
         {        
             LevelLength = 3000;
             Gravity = 3;
             backgroundBuffer = new Bitmap(LevelLength, 720);
-            traderZone = new TraderZone((int)(LevelLength * 0.2), 100, 450, 350);
+            traderZone = new TraderZone((int)(LevelLength * 0.8), 200, 450, 350);
             ground = new List<DynamicRectangle>
             {
-                new DynamicRectangle(0, this.ClientSize.Height - 80, LevelLength/2, 80, GroundTexture),
-                new DynamicRectangle(LevelLength/2, this.ClientSize.Height - 80, LevelLength/2, 80, GroundTexture)
+                new DynamicRectangle(0, this.ClientSize.Height - 80, LevelLength / 2, 80, GroundTexture),
+                new DynamicRectangle(LevelLength/2, this.ClientSize.Height - 80, LevelLength / 2, 80, GroundTexture)
             };
             platforms = new List<DynamicRectangle>
             {
-
+                new DynamicRectangle(1300, 533, 60, 60, boxTexture),
+                new DynamicRectangle(1360, 533, 60, 60, boxTexture),
+                new DynamicRectangle(1420, 533, 60, 60, boxTexture),
+                new DynamicRectangle(1480, 533, 60, 60, boxTexture),
+                new DynamicRectangle(1800, 533, 60, 60, boxTexture)
             };
             enemies = new List<Enemy>
             {
+                new Enemy(500, 400, 50, 50, 50, 5, 25f),
+                new Enemy(700, 400, 50, 50, 50, 5, 25f),
+                new Enemy(600, 400, 50, 50, 50, 5, 25f),
             };
             pickups = new List<Pickup>
             {
+                new Pickup(1250, 450, 50, 50, pickupTexture),
             };
-            TolochinApple = new List<FallingPickup>
-            {
-                //new FallingPickup(300, 100, 150, 150, 10, sacredApple)
-            };
+            TolochinApple = new List<FallingPickup> {};
             player = new Player(
-                        100, 310, // => x, y
-                        0.02f, 100,  // => spead, hp
-                        0.17f, 0.06f, // prec heigth and width
-                        0.1f, 0.1f, // prec x and y
-                        0.2f, playerTexture); // JumpForce prec and start texture
-            //public Sword(int x, int y, float width, float height, int damage)
-            sword = new Sword(player.X, player.Y, 0.15f, 0.18f, 35);
+                        100, 310,
+                        90, 110,  
+                        8f, 100,
+                        23f, playerTexture);
+            sword = new Sword(player.X, player.Y, 150, 100, 25);
         }
         public static bool CheckCollision(int x1, int y1, int w1, int h1, float x2, float y2, float w2, float h2)
         {
@@ -321,9 +322,6 @@ namespace SoloLeveling
                 && y1 < y2 + h2
                 && y1 + h1 > y2;
         }
-
-        public static float prevJumpForcePercent;
-        public static float prevSpeedPrecent;
        
         public static bool CheckCollisionWithPlatforms(int proposedX, int proposedY, Enemy enemy)
         {
@@ -361,7 +359,6 @@ namespace SoloLeveling
         public static Font levelFont;
         public static Font DeathFont;
 
-        private bool f11KeyPressed = false;
         public static Stopwatch YouAreDeadTimer = new Stopwatch();
         private bool isBackgroundInvalidated = true;
         public static Bitmap ExpParticleTexture = new Bitmap(Path.Combine(resourcesPath, "ExpPariticle.png"));
@@ -382,24 +379,18 @@ namespace SoloLeveling
                () => EnemyMovement.UpdateEnemies(),
                () => ParticalMovement.UpdateParticles()
             );
-
+            
             Rectangle TradeZoneRect = new Rectangle((int)traderZone.Bounds.X, (int)traderZone.Bounds.Y, (int)traderZone.Bounds.Width, (int)traderZone.Bounds.Height);
-            if (player.GetRectangle(ClientSize).IntersectsWith(TradeZoneRect))
+            if (player.GetRectangle().IntersectsWith(TradeZoneRect))
             {
                 if (TolochinApple.Count == 0 && !GameIsEnd)
                 {
-                    FallingPickup newPickup = new FallingPickup((int)(LevelLength * 0.9), 300, 40, 40, 10, sacredApple);
+                    FallingPickup newPickup = new FallingPickup((int)(LevelLength * 0.9), 150, 40, 40, 10, sacredApple);
                     TolochinApple.Add(newPickup);
                 }
             }
 
             healthBar.UpdateHealth(player.CurrentHealth);
-
-            if (f11KeyPressed)
-            {
-                ToggleFullScreen();
-                f11KeyPressed = false;
-            }
 
             foreach (var Apple in TolochinApple)
             {
@@ -416,12 +407,12 @@ namespace SoloLeveling
                         break;
                     }
                 }
-                if (AppleRect.IntersectsWith(player.GetRectangle(this.ClientSize)))
+                if (AppleRect.IntersectsWith(player.GetRectangle()))
                 {
                     player.TakeDamage(1000);
                     TolochinApple.Remove(Apple);
                     GameIsEnd = true;
-                    //EndingMusic.Play();
+                    SoundManager.PlayEndingMusic();
                     deathOverlayTimer = new Timer();
                     deathOverlayTimer.Interval = gameTimer.Interval;
                     deathOverlayTimer.Tick += DeathOverlayTimer_Tick;
@@ -435,16 +426,16 @@ namespace SoloLeveling
                 RectangleF pickupRectF = pickup.GetRectangle();
                 Rectangle pickupRect = new Rectangle((int)pickupRectF.X, (int)pickupRectF.Y, (int)pickupRectF.Width, (int)pickupRectF.Height);
 
-                if (player.GetRectangle(ClientSize).IntersectsWith(pickupRect))
+                if (player.GetRectangle().IntersectsWith(pickupRect))
                 {
-                    SoundManager.PlayEndingMusic();
+                    SoundManager.PlayEatingSound();
                     player.RestoreHealth(20);
                     pickups.Remove(pickup);
                     break;
                 }
             }
 
-            foreach (var enemy in enemies.Where(enemy => player.GetRectangle(this.ClientSize).IntersectsWith(enemy.GetRectangle(this.ClientSize))))
+            foreach (var enemy in enemies.Where(enemy => player.GetRectangle().IntersectsWith(enemy.GetRectangle())))
             {
                 if (enemy.AttackCooldown.Elapsed.TotalSeconds >= 1)
                 {
@@ -489,7 +480,7 @@ namespace SoloLeveling
         }
         private void DeathOverlayTimer_Tick(object sender, EventArgs e)
         {
-            if (YouAreDeadTimer.ElapsedMilliseconds > 2500 && !GameIsEnd)
+            if (YouAreDeadTimer.ElapsedMilliseconds > 3500 && !GameIsEnd)
             {
                 int increment = maxOverlayAlpha / (overlayDuration / deathOverlayTimer.Interval);
 
@@ -528,117 +519,7 @@ namespace SoloLeveling
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            AdaptToResolution();
             Invalidate();
-        }
-        private void AdaptToResolution()
-        {
-            if ((originalResolution != Size.Empty && windowState != FormWindowState.Minimized))
-            {
-                float widthRatio = (float)this.ClientSize.Width / originalResolution.Width;
-                float heightRatio = (float)this.ClientSize.Height / originalResolution.Height;
-
-                LevelLength = (int)(LevelLength * widthRatio);
-                traderZone = new TraderZone(traderZone.Bounds.X * widthRatio, traderZone.Bounds.Y * heightRatio, traderZone.Bounds.Width * widthRatio, traderZone.Bounds.Height * heightRatio);
-                Gravity *= heightRatio;
-                healthBar.barWidth *= widthRatio;
-                healthBar.barHeight *= widthRatio;
-
-                player.X = (int)(player.X * widthRatio);
-                player.Y = (int)(player.Y * heightRatio);
-
-                ResizeAdaptatinon.AdaptFallingPickUps(TolochinApple, widthRatio, heightRatio);
-                ResizeAdaptatinon.AdaptPeekUps(pickups, widthRatio, heightRatio);
-                ResizeAdaptatinon.AdaptDynamicRectangles(ground, widthRatio, heightRatio);
-                ResizeAdaptatinon.AdaptDynamicRectangles(platforms, widthRatio, heightRatio);
-
-                sword.X = (int)Math.Round(sword.X * widthRatio);
-                sword.Y = (int)Math.Round(sword.Y * widthRatio);
-
-                //ResizeAdaptatinon.AdaptAnimationFrames(playerAFKAnimation.Frames, widthRatio, heightRatio);
-                //ResizeAdaptatinon.AdaptAnimationFrames(playerChargedAttackAnimation.Frames, widthRatio, heightRatio);
-                //ResizeAdaptatinon.AdaptAnimationFrames(playerMovingLeftAnimation.Frames, widthRatio, heightRatio);
-                //ResizeAdaptatinon.AdaptAnimationFrames(playerMovingRightAnimation.Frames, widthRatio, heightRatio);
-                //ResizeAdaptatinon.AdaptAnimationFrames(playerDeathAnimation.Frames, widthRatio, heightRatio);
-                //ResizeAdaptatinon.AdaptAnimationFrames(playerAttackAnimation.Frames, widthRatio, heightRatio);
-
-                //ResizeAdaptatinon.AdaptAnimationFrames(enemyMovingAnimation.Frames, widthRatio, heightRatio);
-                foreach (var enemy in enemies.ToList())
-                {
-                    int newEnemyX = (int)(enemy.X * widthRatio);
-                    int newEnemyY = (int)(enemy.Y * heightRatio);
-
-                    enemy.X = newEnemyX;
-                    enemy.Y = newEnemyY;
-
-                    enemy.HorizontalSpeed = (int)Math.Round(enemy.HorizontalSpeed * widthRatio);
-                    enemy.JumpSpeed = (int)Math.Round(enemy.JumpSpeed * heightRatio);
-
-                    enemy.IsOnGround = false;
-                }
-                int newCameraX = (int)(cameraX * widthRatio);
-                cameraX = newCameraX;
-
-                foreach (var particle in particles)
-                {
-                    particle.Size = (int)(widthRatio * particle.Size);
-                    particle.SpeedX = widthRatio * particle.SpeedX;
-                    particle.SpeedY = widthRatio * particle.SpeedX;
-                }
-
-                if (!gameStarted)
-                {
-                    float newLogoX = LogoPicture.Location.X * widthRatio;
-                    float newLogoY = LogoPicture.Location.Y * heightRatio;
-
-                    float newLogoWidth = LogoPicture.Width * widthRatio;
-                    float newLogoHeight = LogoPicture.Height * heightRatio;
-
-                    LogoPicture.Location = new Point((int)Math.Round(newLogoX), (int)Math.Round(newLogoY));
-                    LogoPicture.Size = new Size((int)Math.Round(newLogoWidth), (int)Math.Round(newLogoHeight));
-
-                    float newButtonX = StartGameBTN.Location.X * widthRatio;
-                    float newButtonY = StartGameBTN.Location.Y * heightRatio;
-
-                    StartGameBTN.Location = new Point((int)Math.Round(newButtonX), (int)Math.Round(newButtonY));
-
-                    float newButtonWidth = StartGameBTN.Width * widthRatio;
-                    float newButtonHeight = StartGameBTN.Height * heightRatio;
-
-                    StartGameBTN.Size = new Size((int)Math.Round(newButtonWidth), (int)Math.Round(newButtonHeight));
-
-                    int newButtonX2 = (int)Math.Round(LeaveGameBTN.Location.X * widthRatio);
-                    int newButtonY2 = (int)Math.Round(LeaveGameBTN.Location.Y * heightRatio);
-
-                    LeaveGameBTN.Location = new Point(newButtonX2, newButtonY2);
-
-                    float newButtonWidth2 = LeaveGameBTN.Width * widthRatio;
-                    float newButtonHeight2 = LeaveGameBTN.Height * heightRatio;
-
-                    LeaveGameBTN.Size = new Size((int)Math.Round(newButtonWidth2), (int)Math.Round(newButtonHeight2));
-
-                    ResizeAdaptatinon.AdaptFontSize(StartGameBTN, widthRatio);
-                    ResizeAdaptatinon.AdaptFontSize(LeaveGameBTN, widthRatio);
-                }
-                isBackgroundInvalidated = true;
-                backgroundBuffer = new Bitmap(LevelLength, this.ClientSize.Height * 2);
-            }
-            gamePaused = WindowState == FormWindowState.Minimized ? true : false;
-
-            originalResolution = this.ClientSize;
-        }
-        private void ToggleFullScreen()
-        {
-            if (this.FormBorderStyle == FormBorderStyle.None)
-            {
-                this.FormBorderStyle = FormBorderStyle.Sizable;
-                this.WindowState = FormWindowState.Normal;
-            }
-            else
-            {
-                this.FormBorderStyle = FormBorderStyle.None;
-                this.WindowState = FormWindowState.Maximized;
-            }
         }
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -687,9 +568,9 @@ namespace SoloLeveling
                     g.DrawImage(Apple.Texture, Apple.X, Apple.Y, Apple.Width, Apple.Height);
                 }
 
-                e.Graphics.DrawRectangle(new Pen(Color.Blue, 1), sword.GetRectangle(this.ClientSize));
+                e.Graphics.DrawRectangle(new Pen(Color.Transparent, 1), sword.GetRectangle());
 
-                e.Graphics.DrawRectangle(new Pen(Color.Red, 1), player.GetRectangle(this.ClientSize));
+                e.Graphics.DrawRectangle(new Pen(Color.Transparent, 1), player.GetRectangle());
 
                 DrawAnimation.DrawPlayerAnimation(g);
                 DrawAnimation.DrawEnemyAnimation(g);
@@ -724,7 +605,7 @@ namespace SoloLeveling
                 // Отрисовка врагов
                 foreach (var enemy in enemies)
                 {
-                    e.Graphics.DrawRectangle(new Pen(Color.Transparent, 1), enemy.GetRectangle(this.ClientSize));
+                    e.Graphics.DrawRectangle(new Pen(Color.Transparent, 1), enemy.GetRectangle());
                 }
 
                 // Отрисовка HealthBar-а
@@ -739,7 +620,6 @@ namespace SoloLeveling
         {
             if (e.Button == MouseButtons.Left && player.IsOnGround && !player.IsChargingAttack)
             {
-                //SoundManager.PlayDefaultAttackSound();
                 SwordAttack.AttackWithSword();
             }
             if (e.Button == MouseButtons.Right && player.IsOnGround)
@@ -752,10 +632,6 @@ namespace SoloLeveling
         // Нажатие кнопк на клавиатуре
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F11)
-            {
-                ToggleFullScreen();
-            }
             if (e.KeyCode == Keys.Escape && gameStarted && !player.IsDead())
             {
                 if(PauseMenu.Active == false)
@@ -788,7 +664,7 @@ namespace SoloLeveling
         // Кнопка "Об игре"
         private void AboutGameBTN_Click(object sender, EventArgs e)
         {
-
+            
         }
     }
     public static class Keyboard

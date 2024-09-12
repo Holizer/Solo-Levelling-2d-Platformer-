@@ -26,26 +26,27 @@ namespace SoloLeveling
         public static Animation playerAttackAnimation;
         public static Animation playerAttackAnimation_Left;
 
-
         public static Animation enemyMovingAnimation;
+        public static Animation enemyMovingAnimation_Left;
+
 
         public static void SetupInGameAnimation()
         {
             string afkAnimFolderPath = Path.Combine(resourcesPath, "AFKAnim");
             string[] afkFrames = { "Frame1.png", "Frame2.png", "Frame3.png", "Frame4.png", "Frame5.png" };
-            playerAFKAnimation = LoadAnimation(afkAnimFolderPath, afkFrames, new RectangleF(0, 60, 90, 110), new PointF(0f, 0.5f), 200);
+            playerAFKAnimation = LoadAnimation(afkAnimFolderPath, afkFrames, new RectangleF(0, 55, 90, 110), new PointF(0f, 0.5f), 200);
 
             string movingRightAinmFolderPath = Path.Combine(resourcesPath, "MovingRigthAnim");
             string[] movingRightFrames = { "frame1.png", "frame2.png", "frame3.png", "frame4.png", "frame5.png", "frame6.png", "frame7.png", "frame8.png" };
-            playerMovingRightAnimation = LoadAnimation(movingRightAinmFolderPath, movingRightFrames, new RectangleF(0, 60, 95, 110), new PointF(0f, 0.5f), 90);
+            playerMovingRightAnimation = LoadAnimation(movingRightAinmFolderPath, movingRightFrames, new RectangleF(0, 55, 95, 110), new PointF(0f, 0.5f), 90);
 
             string movingLeftAnimFolderPath = Path.Combine(resourcesPath, "MovingLeftAnim");
             string[] movingLeftFrames = { "frame1.png", "frame2.png", "frame3.png", "frame4.png", "frame5.png", "frame6.png", "frame7.png", "frame8.png" };
-            playerMovingLeftAnimation = LoadAnimation(movingLeftAnimFolderPath, movingLeftFrames, new RectangleF(0, 60, 85, 110), new PointF(0f, 0.5f), 90);
+            playerMovingLeftAnimation = LoadAnimation(movingLeftAnimFolderPath, movingLeftFrames, new RectangleF(0, 55, 85, 110), new PointF(0f, 0.5f), 90);
 
             string attackAnimFolderPath = Path.Combine(resourcesPath, "AttackAnim");
             string[] attackAnimFrames = { "frame1.png", "frame2.png" };
-            playerAttackAnimation = LoadAnimation(attackAnimFolderPath, attackAnimFrames, new RectangleF(-20, 38, 175, 153), new PointF(0f, 0.5f), 120);
+            playerAttackAnimation = LoadAnimation(attackAnimFolderPath, attackAnimFrames, new RectangleF(-20, 33, 175, 153), new PointF(0f, 0.5f), 120);
 
             string chargedRightAttackAnimFolderPath = Path.Combine(resourcesPath, "ChargedAttackAnim");
             string[] chargedRightAttackAnimFrames = {
@@ -58,8 +59,7 @@ namespace SoloLeveling
             playerChargedAttackAnimation = LoadAnimation(
                 chargedRightAttackAnimFolderPath,
                 chargedRightAttackAnimFrames,
-                //new RectangleF(30, -49, 652, 390),
-                new RectangleF(-10, -40, 619, 370),
+                new RectangleF(-10, -45, 619, 370),
                 new PointF(0.3f, 0.5f),
                 100
             );
@@ -73,30 +73,30 @@ namespace SoloLeveling
             playerDeathAnimation = LoadAnimation(
                 deathAnimFolderPath,
                 deathAnimFrames,
-                new RectangleF(0, -49, 234, 260),
+                new RectangleF(0, 20, 198, 208),
+                new PointF(0, 0.5f),
+                260
+            );
+
+            string enemyMovingAnimFolderPath = Path.Combine(resourcesPath, "enemyMoving");
+            string[] enemyMovingAnimFrames = {
+                "frame1.png", "frame2.png", "frame3.png", "frame4.png",
+                "frame5.png", "frame6.png", "frame7.png", "frame8.png"
+            };
+            enemyMovingAnimation = LoadAnimation(
+                enemyMovingAnimFolderPath,
+                enemyMovingAnimFrames,
+                new RectangleF(0, 0, 50, 50),
                 new PointF(0.5f, 0.5f),
-                150
+                100
             );
 
             playerChargedAttackAnimation_Left = AnimationManagaer.CreateInvertedAnimation(playerChargedAttackAnimation, -110);
             playerAFKAnimation_Left = AnimationManagaer.CreateInvertedAnimation(playerAFKAnimation, 0);
             playerAttackAnimation_Left = AnimationManagaer.CreateInvertedAnimation(playerAttackAnimation, -30);
 
+            enemyMovingAnimation_Left = AnimationManagaer.CreateInvertedAnimation(enemyMovingAnimation, 0);
         }
-
-        //enemyMovingAnimation = new Animation(new List<AnimationFrame>
-        //            {
-        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame1.png")), new RectangleF(0, 2, 35, 40)),
-        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame2.png")), new RectangleF(0, 2, 35, 40)),
-        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame3.png")), new RectangleF(0, 2, 35, 40)),
-        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame4.png")), new RectangleF(0, 2, 35, 40)),
-        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame5.png")), new RectangleF(0, 2, 35, 40)),
-        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame6.png")), new RectangleF(0, 2, 35, 40)),
-        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame7.png")), new RectangleF(0, 2, 35, 40)),
-        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame8.png")), new RectangleF(0, 2, 35, 40)),
-        //            }, 275);
-        //        }
-
         public static void DrawPlayerAnimation(Graphics g)
         {
             Animation currentAnimation = GetCurrentAnimation();
@@ -197,14 +197,14 @@ namespace SoloLeveling
 
         private static void SetPlayerMovementAndAttack(float jumpForcePercent, float speedPercent)
         {
-            player.JumpForcePercent = jumpForcePercent;
-            player.SpeedPrecent = speedPercent;
+            player.JumpForce = jumpForcePercent;
+            player.Speed = speedPercent;
         }
 
         private static void ResetPlayerAfterAttack()
         {
-            player.JumpForcePercent = prevJumpForcePercent;
-            player.SpeedPrecent = prevSpeedPrecent;
+            player.JumpForce = SwordAttack.savedJumpForce;
+            player.Speed = SwordAttack.savedSpeed;
             player.currentSpriteIndex = 0;
         }
 
@@ -234,18 +234,13 @@ namespace SoloLeveling
 
             foreach (var enemy in enemies)
             {
-                if (enemy.CurrentDirection == Enemy.EnemyDirection.Right)
-                {
-                    currentAnimation = enemyMovingAnimation;
-                    enemy.CurrentAnimation = currentAnimation;
-                    enemyAnimationTimer.Interval = enemyMovingAnimation.Interval;
-                }
-                else if (enemy.CurrentDirection == Enemy.EnemyDirection.Left)
-                {
-                    currentAnimation = AnimationManagaer.CreateInvertedAnimation(enemyMovingAnimation, 0);
-                    enemy.CurrentAnimation = currentAnimation;
-                    enemyAnimationTimer.Interval = enemyMovingAnimation.Interval;
-                }
+                currentAnimation = (enemy.CurrentDirection == Enemy.EnemyDirection.Right)
+                    ? enemyMovingAnimation
+                    : enemyMovingAnimation_Left;
+
+                enemy.CurrentAnimation = currentAnimation;
+                enemyAnimationTimer.Interval = currentAnimation.Interval;
+
                 g.DrawImage(
                     currentAnimation.Frames[enemy.currentSpriteIndex].Frame,
                     enemy.X + currentAnimation.Frames[enemy.currentSpriteIndex].DisplayRectangle.X,

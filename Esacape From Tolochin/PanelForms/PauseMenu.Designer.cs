@@ -30,14 +30,14 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PauseMenu));
             this.PausePanel = new System.Windows.Forms.Panel();
-            this.PausePanelBG = new System.Windows.Forms.PictureBox();
             this.ButtonsPauseMenuPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.ContinueGameBTN = new System.Windows.Forms.Button();
-            this.SettingsBTN = new System.Windows.Forms.Button();
             this.LeaveToMainMenuBTN = new System.Windows.Forms.Button();
+            this.SettingsBTN = new System.Windows.Forms.Button();
+            this.ContinueGameBTN = new System.Windows.Forms.Button();
+            this.PausePanelBG = new System.Windows.Forms.PictureBox();
             this.PausePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PausePanelBG)).BeginInit();
             this.ButtonsPauseMenuPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PausePanelBG)).BeginInit();
             this.SuspendLayout();
             // 
             // PausePanel
@@ -50,22 +50,12 @@
             this.PausePanel.Size = new System.Drawing.Size(1262, 673);
             this.PausePanel.TabIndex = 0;
             // 
-            // PausePanelBG
-            // 
-            this.PausePanelBG.BackColor = System.Drawing.Color.Transparent;
-            this.PausePanelBG.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PausePanelBG.Location = new System.Drawing.Point(0, 0);
-            this.PausePanelBG.Name = "PausePanelBG";
-            this.PausePanelBG.Size = new System.Drawing.Size(1262, 673);
-            this.PausePanelBG.TabIndex = 0;
-            this.PausePanelBG.TabStop = false;
-            // 
             // ButtonsPauseMenuPanel
             // 
             this.ButtonsPauseMenuPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonsPauseMenuPanel.BackgroundImage = global::Esacape_From_Tolochin.Properties.Resources.panelbg;
+            this.ButtonsPauseMenuPanel.BackgroundImage = global::Esacape_From_Tolochin.Properties.Resources.Screenshot_2023_11_27_125037;
             this.ButtonsPauseMenuPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonsPauseMenuPanel.ColumnCount = 1;
             this.ButtonsPauseMenuPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -82,21 +72,21 @@
             this.ButtonsPauseMenuPanel.Size = new System.Drawing.Size(534, 314);
             this.ButtonsPauseMenuPanel.TabIndex = 1;
             // 
-            // ContinueGameBTN
+            // LeaveToMainMenuBTN
             // 
-            this.ContinueGameBTN.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.ContinueGameBTN.BackColor = System.Drawing.Color.Transparent;
-            this.ContinueGameBTN.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ContinueGameBTN.BackgroundImage")));
-            this.ContinueGameBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ContinueGameBTN.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ContinueGameBTN.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ContinueGameBTN.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.ContinueGameBTN.Location = new System.Drawing.Point(92, 84);
-            this.ContinueGameBTN.Name = "ContinueGameBTN";
-            this.ContinueGameBTN.Size = new System.Drawing.Size(350, 40);
-            this.ContinueGameBTN.TabIndex = 7;
-            this.ContinueGameBTN.Text = "Продолжить";
-            this.ContinueGameBTN.UseVisualStyleBackColor = false;
+            this.LeaveToMainMenuBTN.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.LeaveToMainMenuBTN.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("LeaveToMainMenuBTN.BackgroundImage")));
+            this.LeaveToMainMenuBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.LeaveToMainMenuBTN.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.LeaveToMainMenuBTN.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.LeaveToMainMenuBTN.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.LeaveToMainMenuBTN.Location = new System.Drawing.Point(92, 188);
+            this.LeaveToMainMenuBTN.Name = "LeaveToMainMenuBTN";
+            this.LeaveToMainMenuBTN.Size = new System.Drawing.Size(350, 40);
+            this.LeaveToMainMenuBTN.TabIndex = 9;
+            this.LeaveToMainMenuBTN.Text = "Выйти из игры";
+            this.LeaveToMainMenuBTN.UseVisualStyleBackColor = true;
+            this.LeaveToMainMenuBTN.Click += new System.EventHandler(this.LeaveToMainMenuBTN_Click_1);
             // 
             // SettingsBTN
             // 
@@ -113,20 +103,32 @@
             this.SettingsBTN.Text = "Настройки";
             this.SettingsBTN.UseVisualStyleBackColor = true;
             // 
-            // LeaveToMainMenuBTN
+            // ContinueGameBTN
             // 
-            this.LeaveToMainMenuBTN.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.LeaveToMainMenuBTN.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("LeaveToMainMenuBTN.BackgroundImage")));
-            this.LeaveToMainMenuBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.LeaveToMainMenuBTN.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.LeaveToMainMenuBTN.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.LeaveToMainMenuBTN.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.LeaveToMainMenuBTN.Location = new System.Drawing.Point(92, 188);
-            this.LeaveToMainMenuBTN.Name = "LeaveToMainMenuBTN";
-            this.LeaveToMainMenuBTN.Size = new System.Drawing.Size(350, 40);
-            this.LeaveToMainMenuBTN.TabIndex = 9;
-            this.LeaveToMainMenuBTN.Text = "Выйти из игры";
-            this.LeaveToMainMenuBTN.UseVisualStyleBackColor = true;
+            this.ContinueGameBTN.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.ContinueGameBTN.BackColor = System.Drawing.Color.Transparent;
+            this.ContinueGameBTN.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ContinueGameBTN.BackgroundImage")));
+            this.ContinueGameBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ContinueGameBTN.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ContinueGameBTN.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.ContinueGameBTN.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.ContinueGameBTN.Location = new System.Drawing.Point(92, 84);
+            this.ContinueGameBTN.Name = "ContinueGameBTN";
+            this.ContinueGameBTN.Size = new System.Drawing.Size(350, 40);
+            this.ContinueGameBTN.TabIndex = 7;
+            this.ContinueGameBTN.Text = "Продолжить";
+            this.ContinueGameBTN.UseVisualStyleBackColor = false;
+            this.ContinueGameBTN.Click += new System.EventHandler(this.ContinueGameBTN_Click_1);
+            // 
+            // PausePanelBG
+            // 
+            this.PausePanelBG.BackColor = System.Drawing.Color.Transparent;
+            this.PausePanelBG.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PausePanelBG.Location = new System.Drawing.Point(0, 0);
+            this.PausePanelBG.Name = "PausePanelBG";
+            this.PausePanelBG.Size = new System.Drawing.Size(1262, 673);
+            this.PausePanelBG.TabIndex = 0;
+            this.PausePanelBG.TabStop = false;
             // 
             // PauseMenu
             // 
@@ -139,8 +141,8 @@
             this.Name = "PauseMenu";
             this.Text = "Form1";
             this.PausePanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.PausePanelBG)).EndInit();
             this.ButtonsPauseMenuPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.PausePanelBG)).EndInit();
             this.ResumeLayout(false);
 
         }
