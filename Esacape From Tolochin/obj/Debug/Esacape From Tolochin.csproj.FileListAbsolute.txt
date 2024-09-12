@@ -52,9 +52,33 @@ D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\Esacape From Toloc
 D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\Esacape From Tolochin.exe
 D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\Esacape From Tolochin.pdb
 D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\Esacape From Tolochin.csproj.AssemblyReference.cache
-D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\Esacape_From_Tolochin.MainForm.resources
 D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\Esacape_From_Tolochin.Properties.Resources.resources
 D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\Esacape From Tolochin.csproj.GenerateResource.cache
 D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\Esacape From Tolochin.csproj.CoreCompileInputs.cache
 D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\Esacape From Tolochin.exe
 D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\Esacape From Tolochin.pdb
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\SoloLeveling.MainForm.resources
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\SoloLeveling.Loading.resources
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\SoloLeveling.Ending.resources
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\SoloLeveling.PauseMenu.resources
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\Microsoft.Win32.Registry.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.Asio.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.Core.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.Midi.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.Wasapi.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.WinForms.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.WinMM.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\System.Security.AccessControl.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\System.Security.Principal.Windows.dll
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\Microsoft.Win32.Registry.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.Asio.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.Core.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.Midi.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.Wasapi.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.WinForms.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\NAudio.WinMM.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\System.Security.AccessControl.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\bin\Debug\System.Security.Principal.Windows.xml
+D:\2d-Game-Developing-Practic\Esacape From Tolochin\obj\Debug\Esacape From Tolochin.csproj.CopyComplete
