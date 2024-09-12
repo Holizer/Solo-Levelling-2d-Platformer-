@@ -154,7 +154,6 @@ namespace SoloLeveling
             }
         }
         
-        
         private void UpdatePlayerAnimation(object sender, EventArgs e)
         {
             /*
@@ -304,7 +303,7 @@ namespace SoloLeveling
             };
             TolochinApple = new List<FallingPickup>
             {
-                new FallingPickup(300, 100, 150, 150, 10, sacredApple)
+                //new FallingPickup(300, 100, 150, 150, 10, sacredApple)
             };
             player = new Player(
                         100, 310, // => x, y
@@ -688,9 +687,9 @@ namespace SoloLeveling
                     g.DrawImage(Apple.Texture, Apple.X, Apple.Y, Apple.Width, Apple.Height);
                 }
 
-                e.Graphics.DrawRectangle(new Pen(Color.Transparent, 1), sword.GetRectangle(this.ClientSize));
+                e.Graphics.DrawRectangle(new Pen(Color.Blue, 1), sword.GetRectangle(this.ClientSize));
 
-                e.Graphics.DrawRectangle(new Pen(Color.Transparent, 1), player.GetRectangle(this.ClientSize));
+                e.Graphics.DrawRectangle(new Pen(Color.Red, 1), player.GetRectangle(this.ClientSize));
 
                 DrawAnimation.DrawPlayerAnimation(g);
                 DrawAnimation.DrawEnemyAnimation(g);

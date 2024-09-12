@@ -9,43 +9,6 @@ namespace SoloLeveling
 {
     public class AnimationManagaer
     {
-        // Состояния игрока
-        public static Animation playerAFKAnimation;
-        public static Animation playerMovingRightAnimation;
-        public static Animation playerMovingLeftAnimation;
-        public static Animation playerChargedAttackAnimation;
-        public static Animation playerDeathAnimation;
-        public static Animation playerAttackAnimation;
-
-        // Состояния противника
-        public static Animation enemyMovingAnimation;
-        // Фрейм анимации
-        public class AnimationFrame
-        {
-            public Bitmap Frame { get; }
-            public RectangleF DisplayRectangle { get; }
-            public PointF Anchor { get; } // Добавлен якорь
-
-            public AnimationFrame(Bitmap frame, RectangleF displayRectangle, PointF anchor)
-            {
-                Frame = frame;
-                DisplayRectangle = displayRectangle;
-                Anchor = anchor;
-            }
-        }
-        public static AnimationFrame CreateFrameWithAnchor(Bitmap frame, float originX, float originY, PointF anchor)
-        {
-            // Вычисляем смещение по X и Y относительно якоря
-            float offsetX = originX - (frame.Width * anchor.X);
-            float offsetY = originY - (frame.Height * anchor.Y);
-
-            // Создаём новый прямоугольник отображения с учётом смещения
-            RectangleF displayRect = new RectangleF(offsetX, offsetY, frame.Width, frame.Height);
-
-            return new AnimationFrame(frame, displayRect, anchor);
-        }
-
-        // Анимация фреймов
         public struct Animation
         {
             public List<AnimationFrame> Frames { get; }
@@ -65,8 +28,31 @@ namespace SoloLeveling
             }
         }
 
+        public class AnimationFrame
+        {
+            public Bitmap Frame { get; }
+            public RectangleF DisplayRectangle { get; }
+            public PointF Anchor { get; }
+
+            public AnimationFrame(Bitmap frame, RectangleF displayRectangle, PointF anchor)
+            {
+                Frame = frame;
+                DisplayRectangle = displayRectangle;
+                Anchor = anchor;
+            }
+        }
+        public static AnimationFrame CreateFrameWithAnchor(Bitmap frame, float originX, float originY, PointF anchor)
+        {
+            float offsetX = originX - (frame.Width * anchor.X);
+            float offsetY = originY - (frame.Height * anchor.Y);
+
+            RectangleF displayRect = new RectangleF(offsetX, offsetY, frame.Width, frame.Height);
+
+            return new AnimationFrame(frame, displayRect, anchor);
+        }
+
         // Инверсия анимации
-        public static Animation CreateInvertedAnimation(Animation originalAnimation)
+        public static Animation CreateInvertedAnimation(Animation originalAnimation, int xOffset)
         {
             List<AnimationFrame> invertedFrames = new List<AnimationFrame>();
 
@@ -75,16 +61,10 @@ namespace SoloLeveling
                 Bitmap invertedBitmap = new Bitmap(frame.Frame);
                 invertedBitmap.RotateFlip(RotateFlipType.RotateNoneFlipX);
 
-                // Создаем новый прямоугольник с инвертированными координатами X
-                RectangleF invertedRect = new RectangleF(
-                    frame.DisplayRectangle.X * -1,
-                    frame.DisplayRectangle.Y,
-                    frame.DisplayRectangle.Width,
-                    frame.DisplayRectangle.Height
-                );
+                RectangleF newDisplayRectangle = frame.DisplayRectangle;
+                newDisplayRectangle.X += xOffset;
 
-                // Используем оригинальный anchor, или создаем новый, если нужно
-                AnimationFrame invertedFrame = new AnimationFrame(invertedBitmap, invertedRect, frame.Anchor);
+                AnimationFrame invertedFrame = new AnimationFrame(invertedBitmap, newDisplayRectangle, frame.Anchor);
                 invertedFrames.Add(invertedFrame);
             }
 
@@ -92,7 +72,6 @@ namespace SoloLeveling
 
             return invertedAnimation;
         }
-
 
         public static Animation LoadAnimation(string folderPath, string[] frameFiles, RectangleF defaultRectangle, PointF anchor, int frameInterval)
         {

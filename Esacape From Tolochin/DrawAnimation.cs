@@ -13,23 +13,39 @@ namespace SoloLeveling
 {
     public class DrawAnimation
     {
+        public static Animation playerAFKAnimation;
+        public static Animation playerAFKAnimation_Left;
+
+        public static Animation playerMovingRightAnimation;
+        public static Animation playerMovingLeftAnimation;
+
+        public static Animation playerChargedAttackAnimation;
+        public static Animation playerChargedAttackAnimation_Left;
+
+        public static Animation playerDeathAnimation;
+        public static Animation playerAttackAnimation;
+        public static Animation playerAttackAnimation_Left;
+
+
+        public static Animation enemyMovingAnimation;
+
         public static void SetupInGameAnimation()
         {
             string afkAnimFolderPath = Path.Combine(resourcesPath, "AFKAnim");
             string[] afkFrames = { "Frame1.png", "Frame2.png", "Frame3.png", "Frame4.png", "Frame5.png" };
-            playerAFKAnimation = LoadAnimation(afkAnimFolderPath, afkFrames, new RectangleF(0, 60, 90, 110), new PointF(0.5f, 0.5f), 200);
+            playerAFKAnimation = LoadAnimation(afkAnimFolderPath, afkFrames, new RectangleF(0, 60, 90, 110), new PointF(0f, 0.5f), 200);
 
             string movingRightAinmFolderPath = Path.Combine(resourcesPath, "MovingRigthAnim");
             string[] movingRightFrames = { "frame1.png", "frame2.png", "frame3.png", "frame4.png", "frame5.png", "frame6.png", "frame7.png", "frame8.png" };
-            playerMovingRightAnimation = LoadAnimation(movingRightAinmFolderPath, movingRightFrames, new RectangleF(0, 60, 95, 110), new PointF(0.5f, 0.5f), 90);
+            playerMovingRightAnimation = LoadAnimation(movingRightAinmFolderPath, movingRightFrames, new RectangleF(0, 60, 95, 110), new PointF(0f, 0.5f), 90);
 
             string movingLeftAnimFolderPath = Path.Combine(resourcesPath, "MovingLeftAnim");
             string[] movingLeftFrames = { "frame1.png", "frame2.png", "frame3.png", "frame4.png", "frame5.png", "frame6.png", "frame7.png", "frame8.png" };
-            playerMovingLeftAnimation = LoadAnimation(movingLeftAnimFolderPath, movingLeftFrames, new RectangleF(0, 60, 85, 110), new PointF(0.5f, 0.5f), 90);
+            playerMovingLeftAnimation = LoadAnimation(movingLeftAnimFolderPath, movingLeftFrames, new RectangleF(0, 60, 85, 110), new PointF(0f, 0.5f), 90);
 
             string attackAnimFolderPath = Path.Combine(resourcesPath, "AttackAnim");
             string[] attackAnimFrames = { "frame1.png", "frame2.png" };
-            playerAttackAnimation = LoadAnimation(attackAnimFolderPath, attackAnimFrames, new RectangleF(0, 4, 125, 110), new PointF(0.5f, 0.5f), 120);
+            playerAttackAnimation = LoadAnimation(attackAnimFolderPath, attackAnimFrames, new RectangleF(-20, 38, 175, 153), new PointF(0f, 0.5f), 120);
 
             string chargedRightAttackAnimFolderPath = Path.Combine(resourcesPath, "ChargedAttackAnim");
             string[] chargedRightAttackAnimFrames = {
@@ -42,8 +58,9 @@ namespace SoloLeveling
             playerChargedAttackAnimation = LoadAnimation(
                 chargedRightAttackAnimFolderPath,
                 chargedRightAttackAnimFrames,
-                new RectangleF(30, -49, 652, 390),
-                new PointF(0.5f, 0.5f),
+                //new RectangleF(30, -49, 652, 390),
+                new RectangleF(-10, -40, 619, 370),
+                new PointF(0.3f, 0.5f),
                 100
             );
 
@@ -56,127 +73,35 @@ namespace SoloLeveling
             playerDeathAnimation = LoadAnimation(
                 deathAnimFolderPath,
                 deathAnimFrames,
-                new RectangleF(30, -49, 234, 260),
+                new RectangleF(0, -49, 234, 260),
                 new PointF(0.5f, 0.5f),
                 150
             );
 
+            playerChargedAttackAnimation_Left = AnimationManagaer.CreateInvertedAnimation(playerChargedAttackAnimation, -110);
+            playerAFKAnimation_Left = AnimationManagaer.CreateInvertedAnimation(playerAFKAnimation, 0);
+            playerAttackAnimation_Left = AnimationManagaer.CreateInvertedAnimation(playerAttackAnimation, -30);
+
         }
-       
-//enemyMovingAnimation = new Animation(new List<AnimationFrame>
-//            {
-//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame1.png")), new RectangleF(0, 2, 35, 40)),
-//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame2.png")), new RectangleF(0, 2, 35, 40)),
-//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame3.png")), new RectangleF(0, 2, 35, 40)),
-//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame4.png")), new RectangleF(0, 2, 35, 40)),
-//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame5.png")), new RectangleF(0, 2, 35, 40)),
-//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame6.png")), new RectangleF(0, 2, 35, 40)),
-//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame7.png")), new RectangleF(0, 2, 35, 40)),
-//                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame8.png")), new RectangleF(0, 2, 35, 40)),
-//            }, 275);
-//        }
+
+        //enemyMovingAnimation = new Animation(new List<AnimationFrame>
+        //            {
+        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame1.png")), new RectangleF(0, 2, 35, 40)),
+        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame2.png")), new RectangleF(0, 2, 35, 40)),
+        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame3.png")), new RectangleF(0, 2, 35, 40)),
+        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame4.png")), new RectangleF(0, 2, 35, 40)),
+        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame5.png")), new RectangleF(0, 2, 35, 40)),
+        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame6.png")), new RectangleF(0, 2, 35, 40)),
+        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame7.png")), new RectangleF(0, 2, 35, 40)),
+        //                new AnimationFrame(new Bitmap(Path.Combine(resourcesPath, "enemy_moving\\frame8.png")), new RectangleF(0, 2, 35, 40)),
+        //            }, 275);
+        //        }
+
         public static void DrawPlayerAnimation(Graphics g)
         {
-            Animation currentAnimation;
-
-            if (player.IsDead())
-            {
-                currentAnimation = playerDeathAnimation;
-                player.CurrentAnimation = playerDeathAnimation;
-                playerAnimationTimer.Interval = playerDeathAnimation.Interval;
-            }
-            else if (player.IsChargingAttack && !player.IsDead())
-            {
-                int moveDirection = player.CurrentDirection == Direction.Right ? 1 : -1;
-                currentAnimation = player.CurrentDirection == Direction.Right ? playerChargedAttackAnimation : AnimationManagaer.CreateInvertedAnimation(playerChargedAttackAnimation);
-                TimeSpan elapsed = DateTime.Now - SwordAttack.chargedAttackStartTime;
-
-                if (elapsed <= playerChargedAttackAnimation.TotalDuration)
-                {
-                    player.JumpForcePercent = 0;
-                    player.SpeedPrecent = 0;
-
-                    int framesCount = currentAnimation.Frames.Count;
-                    player.currentSpriteIndex = (int)(framesCount * elapsed.TotalMilliseconds / playerChargedAttackAnimation.TotalDuration.TotalMilliseconds) % framesCount;
-
-                    if (player.currentSpriteIndex == 2)
-                    {
-                        TryMovePlayer((int)(clientSize.Width * 0.0025) * moveDirection);
-                    }
-                    if (player.currentSpriteIndex == 12)
-                    {
-                        SwordAttack.EnhancedAttack();
-                    }
-                    if (player.currentSpriteIndex == 9)
-                    {
-                        TryMovePlayer((int)(clientSize.Width * 0.017) * moveDirection);
-                    }
-                }
-                else
-                {
-                    player.IsChargingAttack = false;
-
-                    player.JumpForcePercent = prevJumpForcePercent;
-                    player.SpeedPrecent = prevSpeedPrecent;
-                    player.currentSpriteIndex = 0;
-                }
-
-                player.CurrentAnimation = playerChargedAttackAnimation;
-                playerAnimationTimer.Interval = playerChargedAttackAnimation.Interval;
-            }
-            else if (!player.IsChargingAttack && player.IsAttack && !player.IsDead())
-            {
-                currentAnimation = player.CurrentDirection == Player.Direction.Right ? playerAttackAnimation : AnimationManagaer.CreateInvertedAnimation(playerAttackAnimation);
-                TimeSpan elapsed = DateTime.Now - SwordAttack.AttackStartTime;
-                int directionX = player.CurrentDirection == Player.Direction.Right ? 1 : -1;
-
-                if (elapsed <= currentAnimation.TotalDuration)
-                {
-                    player.JumpForcePercent = 0;
-                    player.SpeedPrecent = 0;
-
-                    int framesCount = currentAnimation.Frames.Count;
-                    player.currentSpriteIndex = (int)(framesCount * elapsed.TotalMilliseconds / currentAnimation.TotalDuration.TotalMilliseconds) % framesCount;
-                    if (player.currentSpriteIndex == 1)
-                    {
-                        TryMovePlayer((int)(clientSize.Width * 0.005) * directionX);
-                        sword.X = directionX < 0 ? player.X - player.Width : player.X + player.Width / 4;
-                    }
-                }
-                else
-                {
-                    SwordAttack.Attack();
-                    player.IsAttack = false;
-                    player.JumpForcePercent = prevJumpForcePercent;
-                    player.SpeedPrecent = prevSpeedPrecent;
-                    player.currentSpriteIndex = 0;
-                }
-
-                player.CurrentAnimation = currentAnimation;
-                playerAnimationTimer.Interval = currentAnimation.Interval;
-            }
-
-            else if (player.IsAFK())
-            {
-                currentAnimation = player.CurrentDirection == Player.Direction.Left ? AnimationManagaer.CreateInvertedAnimation(playerAFKAnimation) : playerAFKAnimation;
-                player.CurrentAnimation = playerAFKAnimation;
-                playerAnimationTimer.Interval = playerAFKAnimation.Interval;
-            }
-            else
-            {
-                if (player.CurrentDirection == Player.Direction.Left)
-                {
-                    currentAnimation = playerMovingLeftAnimation;
-                    player.CurrentAnimation = playerMovingLeftAnimation;
-                    playerAnimationTimer.Interval = playerMovingLeftAnimation.Interval;
-                }
-                else
-                {
-                    currentAnimation = playerMovingRightAnimation;
-                    player.CurrentAnimation = playerMovingRightAnimation;
-                    playerAnimationTimer.Interval = playerMovingRightAnimation.Interval;
-                }
-            }
+            Animation currentAnimation = GetCurrentAnimation();
+            player.CurrentAnimation = currentAnimation;
+            playerAnimationTimer.Interval = currentAnimation.Interval;
 
             if (player.currentSpriteIndex < 0 || player.currentSpriteIndex >= currentAnimation.Frames.Count)
             {
@@ -184,7 +109,112 @@ namespace SoloLeveling
             }
 
             var frame = currentAnimation.Frames[player.currentSpriteIndex];
+            DrawFrame(g, frame);
+        }
 
+        private static Animation GetCurrentAnimation()
+        {
+            if (player.IsDead())
+            {
+                return playerDeathAnimation;
+            }
+
+            if (player.IsChargingAttack)
+            {
+                HandleChargedAttack();
+                return player.CurrentDirection == Direction.Right ? playerChargedAttackAnimation : playerChargedAttackAnimation_Left;
+            }
+
+            if (player.IsAttack)
+            {
+                HandleAttack();
+                return player.CurrentDirection == Direction.Right ? playerAttackAnimation : playerAttackAnimation_Left;
+            }
+
+            if (player.IsAFK())
+            {
+                return player.CurrentDirection == Direction.Right ? playerAFKAnimation : playerAFKAnimation_Left; 
+            }
+
+            return player.CurrentDirection == Direction.Left ? playerMovingLeftAnimation : playerMovingRightAnimation;
+        }
+
+        private static void HandleChargedAttack()
+        {
+            TimeSpan elapsed = DateTime.Now - SwordAttack.chargedAttackStartTime;
+            if (elapsed <= playerChargedAttackAnimation.TotalDuration)
+            {
+                SetPlayerMovementAndAttack(0, 0);
+                SetSpriteIndexByElapsedTime(playerChargedAttackAnimation, elapsed);
+
+                if (player.currentSpriteIndex == 2)
+                {
+                    TryMovePlayer((int)(clientSize.Width * 0.0025) * GetMoveDirection());
+                }
+                if (player.currentSpriteIndex == 9)
+                {
+                    TryMovePlayer((int)(clientSize.Width * 0.017) * GetMoveDirection());
+                }
+                if (player.currentSpriteIndex == 12)
+                {
+                    SwordAttack.EnhancedAttack();
+                }
+            }
+            else
+            {
+                ResetPlayerAfterAttack();
+                player.IsChargingAttack = false;
+            }
+        }
+
+        private static void HandleAttack()
+        {
+            TimeSpan elapsed = DateTime.Now - SwordAttack.AttackStartTime;
+            if (elapsed <= playerAttackAnimation.TotalDuration)
+            {
+                SetPlayerMovementAndAttack(0, 0);
+                SetSpriteIndexByElapsedTime(playerAttackAnimation, elapsed);
+
+                if (player.currentSpriteIndex == 1)
+                {
+                    TryMovePlayer((int)(clientSize.Width * 0.005) * GetMoveDirection());
+                    sword.X = player.CurrentDirection == Direction.Left ? player.X - player.Width : player.X + player.Width / 4;
+                }
+            }
+            else
+            {
+                SwordAttack.Attack();
+                ResetPlayerAfterAttack();
+                player.IsAttack = false;
+            }
+        }
+
+        private static void SetSpriteIndexByElapsedTime(Animation animation, TimeSpan elapsed)
+        {
+            int framesCount = animation.Frames.Count;
+            player.currentSpriteIndex = (int)(framesCount * elapsed.TotalMilliseconds / animation.TotalDuration.TotalMilliseconds) % framesCount;
+        }
+
+        private static void SetPlayerMovementAndAttack(float jumpForcePercent, float speedPercent)
+        {
+            player.JumpForcePercent = jumpForcePercent;
+            player.SpeedPrecent = speedPercent;
+        }
+
+        private static void ResetPlayerAfterAttack()
+        {
+            player.JumpForcePercent = prevJumpForcePercent;
+            player.SpeedPrecent = prevSpeedPrecent;
+            player.currentSpriteIndex = 0;
+        }
+
+        private static int GetMoveDirection()
+        {
+            return player.CurrentDirection == Direction.Right ? 1 : -1;
+        }
+
+        private static void DrawFrame(Graphics g, AnimationFrame frame)
+        {
             // Применение якоря для позиционирования изображения
             float drawX = player.X + frame.DisplayRectangle.X - frame.DisplayRectangle.Width * frame.Anchor.X;
             float drawY = player.Y + frame.DisplayRectangle.Y - frame.DisplayRectangle.Height * frame.Anchor.Y;
@@ -197,6 +227,7 @@ namespace SoloLeveling
                 frame.DisplayRectangle.Height
             );
         }
+
         public static void DrawEnemyAnimation(Graphics g)
         {
             Animation currentAnimation = enemyMovingAnimation;
@@ -211,7 +242,7 @@ namespace SoloLeveling
                 }
                 else if (enemy.CurrentDirection == Enemy.EnemyDirection.Left)
                 {
-                    currentAnimation = AnimationManagaer.CreateInvertedAnimation(enemyMovingAnimation);
+                    currentAnimation = AnimationManagaer.CreateInvertedAnimation(enemyMovingAnimation, 0);
                     enemy.CurrentAnimation = currentAnimation;
                     enemyAnimationTimer.Interval = enemyMovingAnimation.Interval;
                 }
@@ -288,8 +319,6 @@ namespace SoloLeveling
 
             g.DrawString(deathText, DeathFont, Brushes.Red, DeathTextLocation);
         }
-        
-        // Отрисовка фона меню паузы
         public static void DrawPauseMenu_BG(Graphics g)
         {
             Color overlayColor = Color.FromArgb(160, 0, 0, 0);

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using static SoloLeveling.MainForm;
-using static SoloLeveling.AnimationManagaer;
 using System.Windows.Forms;
-using static SoloLeveling.Enemy;
+using static SoloLeveling.DrawAnimation;
 using static SoloLeveling.Player;
+using static SoloLeveling.AnimationManagaer;
 using System.Linq;
 
 namespace SoloLeveling
@@ -179,10 +179,8 @@ namespace SoloLeveling
                 }
             }
 
-            player.IsOnGround = ground.Any(rect => CheckCollision(player.X, player.Y + 1, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height))
-                             || platforms.Any(rect => CheckCollision(player.X, player.Y + 1, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height));
-            
-    
+            player.IsOnGround = IsCollidingWithObstacles();
+
             foreach (var platformRect in platforms)
             {
                 var rect = platformRect.ToRectangle(clientSize);
@@ -247,6 +245,12 @@ namespace SoloLeveling
                 }
             }
         }
+        private static bool IsCollidingWithObstacles()
+        {
+            return ground.Any(rect => CheckCollision(player.X, player.Y + 1, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height))
+                   || platforms.Any(rect => CheckCollision(player.X, player.Y + 1, player.Width, player.Height, rect.X, rect.Y, rect.Width, rect.Height));
+        }
+
         private static void HandlePlayerDead()
         {
             player.SpeedPrecent = 0;
@@ -286,5 +290,4 @@ namespace SoloLeveling
             }
         }
     }
-
 }
