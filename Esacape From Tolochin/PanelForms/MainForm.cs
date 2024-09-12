@@ -305,7 +305,7 @@ namespace SoloLeveling
             };
             pickups = new List<Pickup>
             {
-                new Pickup(1250, 450, 50, 50, pickupTexture),
+                new Pickup(1400, 480, 50, 50, pickupTexture),
             };
             TolochinApple = new List<FallingPickup> {};
             player = new Player(
